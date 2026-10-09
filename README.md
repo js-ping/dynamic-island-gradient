@@ -53,7 +53,7 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 3. 把壁纸拖进去，拖分割线调效果
 4. 点「下载壁纸」，传到 iPhone 设为锁屏
 
-> 想用在线版？把仓库开启 GitHub Pages 即可，手机上也能直接开。
+> 想用在线版？仓库已开启 GitHub Pages，但**还需要在部署侧放行 `dynamic-island-gradient` 路径** —— 详见 [docs/版本说明.md](docs/版本说明.md#在线版待办)。
 
 ---
 

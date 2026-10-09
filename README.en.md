@@ -55,7 +55,8 @@ Drag the split handle to compare before / after:
 3. Drop your wallpaper in, drag the split line to taste
 4. Hit "Download", AirDrop it to your iPhone, set as wallpaper
 
-> Want it online? Enable GitHub Pages for the repo and use it from your phone.
+> Want it online? GitHub Pages is enabled, but the `dynamic-island-gradient` path still needs to be
+> allowed on the hosting side — see [docs/版本说明.md](docs/版本说明.md#在线版待办).
 
 ---
 
