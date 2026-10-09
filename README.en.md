@@ -14,8 +14,8 @@ Dynamic Island and status bar blend into the picture instead of slicing it.
 
 [简体中文](README.md) · English
 
-<img src="screenshots/example-before.jpg" width="220" alt="Before">
-<img src="screenshots/example-after.jpg" width="220" alt="After">
+<img src="screenshots/example-before.jpg" width="240" alt="Before">
+<img src="screenshots/example-after.jpg" width="240" alt="After">
 
 </div>
 

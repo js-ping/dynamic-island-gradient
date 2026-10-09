@@ -14,8 +14,8 @@
 
 简体中文 · [English](README.en.md)
 
-<img src="screenshots/example-before.jpg" width="220" alt="原图">
-<img src="screenshots/example-after.jpg" width="220" alt="处理后">
+<img src="screenshots/example-before.jpg" width="240" alt="原图">
+<img src="screenshots/example-after.jpg" width="240" alt="处理后">
 
 </div>
 
