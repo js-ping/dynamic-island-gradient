@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>灵动岛渐变工具 · Dynamic Island Gradient</title>
+<meta name="description" content="给壁纸顶部加一层渐变蒙版，让 iPhone 灵动岛与状态栏自然融入画面。纯前端、零依赖、图片不出本机。">
+<meta name="color-scheme" content="light dark">
+<style>
+/* ============ 主题变量 ============ */
+:root{
+  --radius: 14px;
+  --radius-sm: 10px;
+  --accent: #6d5efc;
+  --accent-2: #a855f7;
+  --ease: cubic-bezier(.32,.72,0,1);
+}
+html[data-theme="dark"], html[data-theme="auto"]{
+  color-scheme: dark;
+  --bg: #0d0e14;
+  --bg-2: #14161f;
+  --panel: #171a24;
+  --panel-2: #1e222e;
+  --line: #282d3c;
+  --line-2: #333a4d;
+  --text: #eef0f6;
+  --text-2: #a3abbedd;
+  --text-3: #6f778c;
+  --shadow: 0 12px 40px rgba(0,0,0,.45);
+}
+html[data-theme="light"]{
+  color-scheme: light;
+  --bg: #f5f6fa;
+  --bg-2: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f1f3f8;
+  --line: #e3e6ef;
+  --line-2: #d2d7e4;
+  --text: #161a24;
+  --text-2: #4c5468;
+  --text-3: #8a92a6;
+  --shadow: 0 10px 34px rgba(23,30,60,.10);
+}
+@media (prefers-color-scheme: light){
+  html[data-theme="auto"]{
+    color-scheme: light;
+    --bg:#f5f6fa; --bg-2:#fff; --panel:#fff; --panel-2:#f1f3f8;
+    --line:#e3e6ef; --line-2:#d2d7e4;
+    --text:#161a24; --text-2:#4c5468; --text-3:#8a92a6;
+    --shadow: 0 10px 34px rgba(23,30,60,.10);
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI","Microsoft YaHei",sans-serif;
+  background:var(--bg); color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; min-height:100vh;
+  overflow-x:hidden;
+}
+button,input,select{font-family:inherit}
+
+/* ============ 顶栏 ============ */
+header{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:12px;
+  padding:12px 20px;
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{
+  width:30px;height:30px;flex:none;border-radius:9px;
+  background:linear-gradient(140deg,var(--accent),var(--accent-2));
+  display:grid;place-items:center;color:#fff;font-size:15px;font-weight:700;
+  box-shadow:0 4px 14px rgba(109,94,252,.4);
+}
+h1{font-size:15.5px;font-weight:650;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+h1 small{font-weight:500;color:var(--text-3);font-size:12px;margin-left:6px;letter-spacing:0}
+.spacer{flex:1}
+.tbtn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:32px;padding:0 12px;border-radius:9px;font-size:13px;
+  background:var(--panel-2);color:var(--text-2);
+  border:1px solid var(--line);text-decoration:none;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+  white-space:nowrap;
+}
+.tbtn:hover{color:var(--text);border-color:var(--line-2)}
+.tbtn.icon{padding:0;width:32px;justify-content:center}
+
+/* ============ 主区 ============ */
+main{flex:1;padding:20px;max-width:1500px;width:100%;margin:0 auto}
+
+/* 上传区 */
+#dropzone{
+  border:2px dashed var(--line-2); border-radius:20px;
+  background:var(--panel);
+  padding:52px 24px; text-align:center; cursor:pointer;
+  transition:border-color .2s,background .2s,transform .2s;
+  max-width:720px;margin:6vh auto 0;
+}
+#dropzone:hover,#dropzone.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--panel))}
+#dropzone .big{font-size:40px;line-height:1;margin-bottom:14px}
+#dropzone h2{font-size:17px;font-weight:600;margin-bottom:6px}
+#dropzone p{color:var(--text-2);font-size:13.5px;line-height:1.7}
+#dropzone .kbd{
+  display:inline-block;padding:1px 6px;border-radius:5px;
+  background:var(--panel-2);border:1px solid var(--line);
+  font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.steps{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.steps div{
+  font-size:12px;color:var(--text-3);
+  padding:6px 12px;border-radius:100px;background:var(--panel-2);border:1px solid var(--line);
+}
+.steps div b{color:var(--text-2);font-weight:600}
+
+/* 工作区 */
+#workspace{display:none;gap:18px;grid-template-columns:340px minmax(0,1fr);align-items:start}
+#workspace.on{display:grid}
+@media(max-width:980px){ #workspace.on{grid-template-columns:1fr} }
+
+/* 控制面板 */
+#panel{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:6px 16px 16px; box-shadow:var(--shadow);
+  position:sticky; top:76px; max-height:calc(100vh - 96px); overflow:auto;
+}
+@media(max-width:980px){#panel{position:static;max-height:none}}
+.grp{padding:14px 0;border-bottom:1px solid var(--line)}
+.grp:last-child{border-bottom:none}
+.grp>label.h{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:11.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:9px;
+}
+.grp .val{color:var(--accent);font-weight:650;font-size:12px;letter-spacing:0;text-transform:none}
+.seg{display:flex;gap:6px}
+.seg button{
+  flex:1;height:34px;border-radius:var(--radius-sm);font-size:13px;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--text-2);
+  cursor:pointer;transition:.15s;
+}
+.seg button:hover{color:var(--text);border-color:var(--line-2)}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.seg.grid2{display:grid;grid-template-columns:1fr 1fr}
+input[type=range]{
+  width:100%;height:22px;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:4px;border-radius:4px;
+  background:linear-gradient(to right,var(--accent) 0 var(--p,50%),var(--line-2) var(--p,50%) 100%);
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:#fff;border:none;box-shadow:0 0 0 1px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.3);
+  margin-top:-6px;transition:transform .12s;
+}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+input[type=range]::-moz-range-track{
+  height:4px;border-radius:4px;
+  background:linear-gradient(to right,var(--accent) 0 var(--p,50%),var(--line-2) var(--p,50%) 100%);
+}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+select,input[type=color]{
+  width:100%;height:36px;border-radius:var(--radius-sm);
+  background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+  font-size:13.5px;padding:0 10px;cursor:pointer;
+}
+input[type=color]{padding:3px;cursor:pointer}
+.hint{font-size:11.5px;color:var(--text-3);line-height:1.6;margin-top:7px}
+.row{display:flex;align-items:center;gap:10px}
+.row .px{font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums;min-width:66px;text-align:right}
+
+/* 曲线预览 */
+#curveBox{
+  margin-top:10px;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:8px 6px 4px;
+}
+#curveBox svg{display:block;width:100%;height:52px}
+#curveBox .cap{font-size:10.5px;color:var(--text-3);text-align:center;padding-bottom:4px;letter-spacing:.04em}
+
+/* 开关 */
+.sw{display:flex;align-items:center;justify-content:space-between;padding:8px 0;cursor:pointer;gap:12px}
+.sw span{font-size:13.5px;color:var(--text-2)}
+.sw input{display:none}
+.sw i{
+  width:40px;height:24px;border-radius:100px;background:var(--line-2);
+  position:relative;transition:background .18s;flex:none;
+}
+.sw i::after{
+  content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform var(--ease) .18s;
+}
+.sw input:checked+i{background:var(--accent)}
+.sw input:checked+i::after{transform:translateX(16px)}
+
+/* 预览台 */
+#viewer{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media(max-width:980px){ #viewer{order:-1} }
+.stage-wrap{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;display:flex;justify-content:center;align-items:center;gap:30px;
+  min-height:300px; box-shadow:var(--shadow);
+  background-image:radial-gradient(circle at 50% 35%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 62%);
+}
+.stage{
+  position:relative;border-radius:16px;overflow:hidden;background:#000;
+  box-shadow:0 18px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08);
+  touch-action:none;user-select:none;
+}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#cvB{clip-path:inset(0 0 0 50%)}
+.tag{
+  position:absolute;top:8px;z-index:6;pointer-events:none;
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  padding:3px 9px;border-radius:100px;
+  background:rgba(0,0,0,.5);color:#fff;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:opacity .2s;
+}
+.tag-a{left:8px}
+.tag-b{right:8px}
+.island{
+  position:absolute;z-index:4;pointer-events:none;display:none;
+  border:1.5px dashed rgba(255,255,255,.85);border-radius:100px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.35);
+}
+.island.on{display:block}
+.island::after{
+  content:"灵动岛";position:absolute;left:50%;top:calc(100% + 5px);transform:translateX(-50%);
+  font-size:9.5px;color:#fff;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:100px;white-space:nowrap;
+}
+.safe{
+  position:absolute;left:0;right:0;z-index:4;pointer-events:none;display:none;
+  border-top:1.5px dashed rgba(109,94,252,.95);
+}
+.safe.on{display:block}
+.safe::after{
+  content:"安全区";position:absolute;right:6px;top:3px;font-size:9.5px;color:#fff;
+  background:rgba(109,94,252,.9);padding:1px 6px;border-radius:100px;
+}
+.split{
+  position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:7;
+  cursor:ew-resize;box-shadow:0 0 12px rgba(0,0,0,.55);transform:translateX(-1px);
+}
+.split::before,.split::after{
+  content:"";position:absolute;left:50%;width:0;height:0;transform:translateX(-50%);
+  border-left:7px solid transparent;border-right:7px solid transparent;
+}
+.split::before{top:0;border-top:9px solid #fff}
+.split::after{bottom:0;border-bottom:9px solid #fff}
+.knob{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:36px;height:36px;border-radius:50%;background:#fff;
+  display:grid;place-items:center;color:#111;font-size:13px;
+  box-shadow:0 3px 12px rgba(0,0,0,.5);
+}
+
+/* 锁屏实机预览 */
+.phone{
+  flex:none;display:none;flex-direction:column;align-items:center;gap:10px;
+}
+@media(min-width:1240px){ .phone{display:flex} }
+.phone .frame{
+  position:relative;width:176px;padding:7px;border-radius:30px;
+  background:linear-gradient(160deg,#4b4f5c,#1b1d24 40%,#3a3e49);
+  box-shadow:0 22px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.07) inset;
+}
+.phone .screen{
+  position:relative;border-radius:24px;overflow:hidden;background:#000;
+  aspect-ratio:1320/2868;
+}
+.phone .screen canvas{display:block;width:100%;height:100%}
+.phone .pill{
+  position:absolute;left:50%;top:1.15%;transform:translateX(-50%);
+  width:28.4%;height:3.87%;background:#000;border-radius:100px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06);
+}
+.phone .lock{
+  position:absolute;left:0;right:0;top:0;text-align:center;
+  padding-top:7.5%;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.45);
+  font-family:-apple-system,"PingFang SC",sans-serif;pointer-events:none;
+}
+.phone .lock .d{font-size:9.5px;font-weight:500;opacity:.92;letter-spacing:.02em}
+.phone .lock .t{font-size:32px;font-weight:250;letter-spacing:-.02em;line-height:1.15;margin-top:1px}
+.phone .lock .bot{
+  position:absolute;left:0;right:0;bottom:10px;font-size:8.5px;opacity:.85;
+}
+.phone .cap{font-size:11px;color:var(--text-3);letter-spacing:.02em}
+
+/* 操作条 */
+.actionbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{
+  height:42px;padding:0 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;
+  border:1px solid transparent;cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 20px rgba(109,94,252,.35)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{background:var(--panel-2);color:var(--text-2);border-color:var(--line)}
+.btn-ghost:hover{color:var(--text);border-color:var(--line-2)}
+.meta{font-size:12px;color:var(--text-3);flex:1;min-width:150px;line-height:1.6}
+.meta b{color:var(--text-2);font-weight:600}
+
+/* 提示条 */
+#toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+  background:var(--text);color:var(--bg);
+  padding:10px 20px;border-radius:100px;font-size:13.5px;font-weight:600;
+  opacity:0;pointer-events:none;transition:.25s var(--ease);z-index:200;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+footer{
+  padding:22px 20px 30px;text-align:center;font-size:12px;color:var(--text-3);line-height:1.9;
+}
+footer a{color:var(--text-2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">◒</div>
+    <h1>灵动岛渐变工具<small>v2.0</small></h1>
+  </div>
+  <div class="spacer"></div>
+  <a class="tbtn" href="使用说明.html" target="_blank" rel="noopener">说明书</a>
+  <button class="tbtn icon" id="themeBtn" title="切换主题">
+    <span id="themeIcon">◐</span>
+  </button>
+</header>
+
+<main>
+  <!-- 上传 -->
+  <section id="dropzone">
+    <div class="big">🖼️</div>
+    <h2>把壁纸拖进来，或者点一下选择</h2>
+    <p>支持 JPG / PNG / WebP / HEIC（Safari）<br>
+       也可以直接按 <span class="kbd">⌘</span><span class="kbd">V</span> 粘贴剪贴板里的图</p>
+    <div class="steps">
+      <div><b>1</b> 放入壁纸</div>
+      <div><b>2</b> 拖动分割线对比效果</div>
+      <div><b>3</b> 下载，设为锁屏/主屏</div>
+    </div>
+    <div style="margin-top:20px">
+      <button class="tbtn" id="demoBtn" style="height:36px;padding:0 16px">没有素材？用示例图试试</button>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+  </section>
+
+  <!-- 工作区 -->
+  <div id="workspace">
+    <!-- 控制面板 -->
+    <aside id="panel">
+      <div class="grp">
+        <label class="h">快速预设</label>
+        <div class="seg">
+          <button data-preset="light">轻</button>
+          <button data-preset="std" class="on">标准</button>
+          <button data-preset="strong">强</button>
+        </div>
+      </div>
+
+      <div class="grp">
+        <label class="h">渐变颜色</label>
+        <select id="mode">
+          <option value="black">纯黑（最通用）</option>
+          <option value="sample">同色采样（取壁纸顶部颜色）</option>
+          <option value="custom">自定义颜色</option>
+        </select>
+        <div id="customWrap" style="margin-top:10px;display:none">
+          <input type="color" id="customColor" value="#0b0d12">
+        </div>
+        <div class="hint" id="modeHint">纯黑最保险：任何壁纸都不会突兀。</div>
+      </div>
+
+      <div class="grp">
+        <label class="h">覆盖强度 <span class="val" id="strengthVal">100%</span></label>
+        <input type="range" id="strength" min="0" max="100" step="1" value="100">
+        <div class="hint">调低可以让顶部只是「压暗」而不是完全盖住。</div>
+      </div>
+
+      <div class="grp">
+        <label class="h">完全覆盖高度 <span class="val" id="hardVal">4.2%</span></label>
+        <div class="row">
+          <input type="range" id="hard" min="0" max="30" step="0.1" value="4.2">
+          <span class="px" id="hardPx">—</span>
+        </div>
+        <div class="hint">这一段是纯色，建议刚好盖住状态栏。</div>
+      </div>
+
+      <div class="grp">
+        <label class="h">渐变结束高度 <span class="val" id="gradVal">13%</span></label>
+        <div class="row">
+          <input type="range" id="grad" min="1" max="60" step="0.1" value="13">
+          <span class="px" id="gradPx">—</span>
+        </div>
+        <div class="hint">从纯色下边缘到这里，颜色由实到透。</div>
+      </div>
+
+      <div class="grp">
+        <label class="h">过渡曲线</label>
+        <div class="seg grid2">
+          <button data-curve="easeout" class="on">缓出</button>
+          <button data-curve="linear">线性</button>
+          <button data-curve="easein">缓入</button>
+          <button data-curve="smooth">S 型</button>
+        </div>
+        <div id="curveBox">
+          <svg viewBox="0 0 120 52" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6d5efc" stop-opacity=".35"/>
+                <stop offset="100%" stop-color="#6d5efc" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path id="curveArea" fill="url(#fillGrad)" d=""></path>
+            <path id="curveLine" fill="none" stroke="#6d5efc" stroke-width="2" stroke-linecap="round" d=""></path>
+          </svg>
+          <div class="cap">上 = 完全覆盖 · 下 = 完全透明</div>
+        </div>
+      </div>
+
+      <div class="grp">
+        <label class="h">辅助</label>
+        <label class="sw"><span>显示灵动岛参考框</span><input type="checkbox" id="showIsland"><i></i></label>
+        <label class="sw"><span>抗色带噪点</span><input type="checkbox" id="dither" checked><i></i></label>
+        <div class="hint">参考框按 iPhone 17 Pro Max 的比例绘制，仅作位置参考。</div>
+      </div>
+
+      <div class="grp">
+        <label class="h">导出</label>
+        <select id="format">
+          <option value="image/jpeg">JPEG（体积小，推荐）</option>
+          <option value="image/png">PNG（无损，体积大）</option>
+        </select>
+        <div id="qualityWrap" style="margin-top:10px">
+          <label class="h" style="margin-bottom:6px">画质 <span class="val" id="qVal">95%</span></label>
+          <input type="range" id="quality" min="60" max="100" step="1" value="95">
+        </div>
+      </div>
+
+      <div class="grp">
+        <button class="tbtn" id="resetParams" style="width:100%;justify-content:center;height:36px">恢复默认参数</button>
+      </div>
+    </aside>
+
+    <!-- 预览 -->
+    <section id="viewer">
+      <div class="stage-wrap">
+        <div class="stage" id="stage">
+          <canvas id="cvA"></canvas>
+          <canvas id="cvB"></canvas>
+          <div class="island" id="islandBox"></div>
+          <div class="safe" id="safeLine"></div>
+          <span class="tag tag-a">原图</span>
+          <span class="tag tag-b">处理后</span>
+          <div class="split" id="split"><div class="knob">⇔</div></div>
+        </div>
+
+        <div class="phone">
+          <div class="frame">
+            <div class="screen">
+              <canvas id="cvP"></canvas>
+              <div class="pill"></div>
+              <div class="lock">
+                <div class="d" id="phoneDate">—</div>
+                <div class="t" id="phoneTime">—</div>
+                <div class="bot">向上轻扫以解锁</div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">锁屏效果预览</div>
+        </div>
+      </div>
+      <div class="actionbar">
+        <button class="btn btn-primary" id="downloadBtn">下载壁纸</button>
+        <button class="btn btn-ghost" id="copyBtn">复制到剪贴板</button>
+        <button class="btn btn-ghost" id="changeBtn">换一张</button>
+        <div class="meta" id="meta"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  所有处理都在你的浏览器里完成 —— 图片不上传、不联网、不留痕。<br>
+  项目开源在 <a href="https://github.com/js-ping/dynamic-island-gradient" target="_blank" rel="noopener">GitHub</a> · MIT License
+</footer>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+ * 灵动岛渐变工具 v2.0
+ * 纯前端 · 零依赖 · 全程本地处理
+ *
+ * 核心思路：不再逐像素遍历（1320×2868 会卡），改用 canvas 原生线性渐变
+ *  + 64 级色标，把过渡曲线离散成停靠点，交给 GPU 合成，拖动滑杆即时出图。
+ * ========================================================================= */
+
+/* ---------- DOM ---------- */
+const $ = id => document.getElementById(id);
+const dropzone = $('dropzone'), fileInput = $('fileInput'), workspace = $('workspace');
+const cvA = $('cvA'), cvB = $('cvB'), cvP = $('cvP');
+const ctxA = cvA.getContext('2d'), ctxB = cvB.getContext('2d'), ctxP = cvP.getContext('2d');
+const stage = $('stage'), split = $('split'), islandBox = $('islandBox'), safeLine = $('safeLine');
+const modeSel = $('mode'), customWrap = $('customWrap'), customColor = $('customColor'), modeHint = $('modeHint');
+const strength = $('strength'), strengthVal = $('strengthVal');
+const hard = $('hard'), hardVal = $('hardVal'), hardPx = $('hardPx');
+const grad = $('grad'), gradVal = $('gradVal'), gradPx = $('gradPx');
+const quality = $('quality'), qVal = $('qVal'), qualityWrap = $('qualityWrap'), formatSel = $('format');
+const showIsland = $('showIsland'), ditherChk = $('dither');
+const meta = $('meta'), toastEl = $('toast');
+const curveLine = $('curveLine'), curveArea = $('curveArea');
+
+/* ---------- 状态 ---------- */
+let img = null;                 // 当前图片
+let splitPct = 50;              // 分割线位置 0-100
+let rafId = 0;
+const DEFAULTS = { mode:'black', strength:100, hard:4.2, grad:13, curve:'easeout', format:'image/jpeg', quality:95, dither:true, island:false };
+const state = { ...DEFAULTS, curve:'easeout' };
+
+/* ---------- 过渡曲线：输入 t(0→1)，输出不透明度(1→0) ---------- */
+const CURVES = {
+  easeout: t => (1 - t) ** 2,              // 顶部就散开，覆盖感最轻
+  linear : t => 1 - t,                     // 均匀
+  easein : t => 1 - t ** 2,                // 颜色下探更深，覆盖感更强
+  smooth : t => 1 - (3 * t * t - 2 * t * t * t) // S 型，两端最柔
+};
+const CURVE_DESC = {
+  easeout:'顶部快速散开，最清爽',
+  linear :'从头到尾均匀过渡',
+  easein :'颜色往下探得更远',
+  smooth :'两端平缓，过渡最柔'
+};
+
+/* ---------- 抗色带噪点纹理（一次性生成，重复平铺） ---------- */
+const noiseTile = (() => {
+  const n = document.createElement('canvas');
+  n.width = n.height = 96;
+  const c = n.getContext('2d');
+  const id = c.createImageData(96, 96);
+  for (let i = 0; i < id.data.length; i += 4) {
+    const v = Math.random() < .5 ? 0 : 255;
+    id.data[i] = id.data[i + 1] = id.data[i + 2] = v;
+    id.data[i + 3] = 4;                    // 极低透明度：肉眼不可见，只打散色带
+  }
+  c.putImageData(id, 0, 0);
+  return n;
+})();
+
+/* ---------- 工具函数 ---------- */
+function hexToRgb(hex) {
+  const h = hex.replace('#', '');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+let toastTimer;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('on'), 2000);
+}
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* =========================================================================
+ * 采样：把图片顶部「中间三分之一」的区域缩放到 1×1 像素
+ * canvas 的原生缩放在这一步就完成了 box 平均，比 JS 里循环求和快几十倍。
+ * ========================================================================= */
+function sampleTopColor(w, h, hardPxVal) {
+  const sh = Math.max(1, Math.round(clamp(hardPxVal, 1, h)));
+  const sw = Math.max(1, Math.round(w / 3));
+  const c = document.createElement('canvas');
+  c.width = 1; c.height = 1;
+  const cx = c.getContext('2d', { willReadFrequently: true });
+  cx.drawImage(img, Math.round(w / 3), 0, sw, sh, 0, 0, 1, 1);
+  const d = cx.getImageData(0, 0, 1, 1).data;
+  return [d[0], d[1], d[2]];
+}
+
+/* =========================================================================
+ * 生成渐变色标：把曲线离散成 N 段，交给 createLinearGradient
+ * ========================================================================= */
+function buildStops(hardRatio, strengthRatio, curveFn, N = 64) {
+  const stops = [];
+  const h = clamp(hardRatio, 0, 1);
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    let a;
+    if (h >= 1) a = 1;
+    else if (t <= h) a = 1;
+    else a = curveFn((t - h) / (1 - h));
+    stops.push([t, clamp(a * strengthRatio, 0, 1)]);
+  }
+  return stops;
+}
+
+/* =========================================================================
+ * 主渲染
+ * ========================================================================= */
+function render() {
+  if (!img) return;
+  const w = img.width, h = img.height;
+
+  const hardPct = state.hard, gradPct = Math.max(state.grad, state.hard);
+  const hardPxVal = h * hardPct / 100;
+  const gradPxVal = Math.max(h * gradPct / 100, hardPxVal + 1);
+  const coverH = Math.round(clamp(gradPxVal, 1, h));
+
+  // 上层画布：原图打底
+  ctxB.setTransform(1, 0, 0, 1, 0, 0);
+  ctxB.clearRect(0, 0, w, h);
+  ctxB.globalCompositeOperation = 'source-over';
+  ctxB.globalAlpha = 1;
+  ctxB.drawImage(img, 0, 0);
+
+  // 取基础色
+  let base;
+  if (state.mode === 'black')        base = [8, 10, 12];
+  else if (state.mode === 'sample')  base = sampleTopColor(w, h, hardPxVal);
+  else                               base = hexToRgb(customColor.value);
+
+  // 渐变色标 → 一次填充
+  const stops = buildStops(hardPxVal / gradPxVal, state.strength / 100, CURVES[state.curve]);
+  const g = ctxB.createLinearGradient(0, 0, 0, coverH);
+  for (const [t, a] of stops) g.addColorStop(t, `rgba(${base[0]},${base[1]},${base[2]},${a})`);
+  ctxB.fillStyle = g;
+  ctxB.fillRect(0, 0, w, coverH);
+
+  // 抗色带
+  if (state.dither) {
+    ctxB.fillStyle = ctxB.createPattern(noiseTile, 'repeat');
+    ctxB.fillRect(0, 0, w, coverH);
+  }
+
+  // 数值回显
+  hardPx.textContent  = Math.round(hardPxVal) + 'px';
+  gradPx.textContent  = Math.round(gradPxVal) + 'px';
+  hardVal.textContent = hardPct.toFixed(1).replace(/\.0$/, '') + '%';
+  gradVal.textContent = gradPct.toFixed(1).replace(/\.0$/, '') + '%';
+  strengthVal.textContent = state.strength + '%';
+
+  // 安全区参考线（画在纯色下边缘）
+  safeLine.style.top = (hardPxVal / h * 100) + '%';
+  renderPhone();
+  updateMeta();
+}
+
+/* 锁屏实机预览：直接把已处理好的画布缩放过去，零额外计算 */
+function renderPhone() {
+  if (!img || !cvP.width) return;
+  ctxP.clearRect(0, 0, cvP.width, cvP.height);
+  ctxP.drawImage(cvB, 0, 0, cvB.width, cvB.height, 0, 0, cvP.width, cvP.height);
+}
+
+/* 锁屏时间（真实时间，不是摆设） */
+function tickClock() {
+  const d = new Date();
+  const wd = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][d.getDay()];
+  $('phoneDate').textContent = `${d.getMonth() + 1}月${d.getDate()}日 ${wd}`;
+  $('phoneTime').textContent = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+/* 原图画布只在换图时画一次 */
+function paintOriginal() {
+  if (!img) return;
+  cvA.width = img.width; cvA.height = img.height;
+  ctxA.drawImage(img, 0, 0);
+  cvB.width = img.width; cvB.height = img.height;
+}
+
+function scheduleRender() {
+  if (rafId) return;
+  rafId = requestAnimationFrame(() => { rafId = 0; render(); });
+}
+
+/* ---------- 舞台尺寸：按图片比例自适应 ---------- */
+function layoutStage() {
+  if (!img) return;
+  const ar = img.width / img.height;
+  const wrapEl = stage.parentElement;
+  const cs = getComputedStyle(wrapEl);
+  const inner = wrapEl.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const phoneEl = document.querySelector('.phone');
+  const phoneW = (phoneEl && getComputedStyle(phoneEl).display !== 'none')
+    ? phoneEl.getBoundingClientRect().width + 30 : 0;
+  const maxW = Math.max(180, inner - phoneW);
+  const maxH = Math.min(window.innerHeight * 0.66, 760);
+  let h = maxH, w = h * ar;
+  if (w > maxW) { w = maxW; h = w / ar; }
+  stage.style.width  = Math.round(w) + 'px';
+  stage.style.height = Math.round(h) + 'px';
+}
+
+/* ---------- 分割对比 ---------- */
+function setSplit(p) {
+  splitPct = clamp(p, 0, 100);
+  split.style.left = splitPct + '%';
+  cvB.style.clipPath = `inset(0 0 0 ${splitPct}%)`;
+  document.querySelector('.tag-a').style.opacity = splitPct < 8  ? 0 : 1;
+  document.querySelector('.tag-b').style.opacity = splitPct > 92 ? 0 : 1;
+  updateMeta();
+}
+let dragging = false;
+function splitFromEvent(e) {
+  const r = stage.getBoundingClientRect();
+  setSplit((e.clientX - r.left) / r.width * 100);
+}
+stage.addEventListener('pointerdown', e => {
+  if (!img) return;
+  dragging = true;
+  stage.setPointerCapture(e.pointerId);
+  splitFromEvent(e);
+});
+stage.addEventListener('pointermove', e => { if (dragging) splitFromEvent(e); });
+stage.addEventListener('pointerup',   e => { dragging = false; try { stage.releasePointerCapture(e.pointerId); } catch (_) {} });
+stage.addEventListener('pointercancel', () => { dragging = false; });
+document.addEventListener('keydown', e => {
+  if (!img) return;
+  if (e.key === 'ArrowLeft')  { setSplit(splitPct - 2); e.preventDefault(); }
+  if (e.key === 'ArrowRight') { setSplit(splitPct + 2); e.preventDefault(); }
+});
+
+/* ---------- 载入图片 ---------- */
+function loadFile(file) {
+  if (!file) return;
+  if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp|heic|heif|bmp|avif)$/i.test(file.name)) {
+    toast('这个文件不是图片'); return;
+  }
+  if (file.size > 60 * 1024 * 1024) { toast('图片超过 60MB，先压缩一下'); return; }
+
+  const url = URL.createObjectURL(file);
+  const im = new Image();
+  im.onload = () => {
+    URL.revokeObjectURL(url);
+    adoptImage(im);
+    toast(`${im.width} × ${im.height} · 已载入`);
+  };
+  im.onerror = () => {
+    URL.revokeObjectURL(url);
+    toast('这个格式浏览器解不开，试试转成 JPG');
+  };
+  im.src = url;
+}
+
+function adoptImage(im) {
+  img = im;
+  dropzone.style.display = 'none';
+  workspace.classList.add('on');
+  cvP.width = 352; cvP.height = 765;     // 锁屏预览画布（固定尺寸，与图片无关）
+  paintOriginal();
+  layoutStage();
+  render();
+  applyIslandRef();
+}
+
+/* ---------- 生成一张示例壁纸（无素材时也能试） ---------- */
+function makeDemo() {
+  const w = 1320, h = 2868;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const x = c.getContext('2d');
+
+  const sky = x.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0,    '#2b3f6b');
+  sky.addColorStop(0.28, '#6a5a8c');
+  sky.addColorStop(0.52, '#d98b6a');
+  sky.addColorStop(0.70, '#f0b56f');
+  sky.addColorStop(1,    '#1b2233');
+  x.fillStyle = sky; x.fillRect(0, 0, w, h);
+
+  // 远山
+  x.fillStyle = 'rgba(28,34,52,.85)';
+  x.beginPath(); x.moveTo(0, h * 0.66);
+  const pts = [0.10,0.34,0.22,0.46,0.30,0.56,0.20,0.60];
+  for (let i = 0; i < pts.length; i++) x.lineTo(w * (i / (pts.length - 1)), h * pts[i]);
+  x.lineTo(w, h); x.lineTo(0, h); x.closePath(); x.fill();
+
+  // 前景
+  x.fillStyle = 'rgba(14,18,28,.95)';
+  x.beginPath(); x.moveTo(0, h * 0.80);
+  x.bezierCurveTo(w * .3, h * .76, w * .7, h * .86, w, h * .78);
+  x.lineTo(w, h); x.lineTo(0, h); x.closePath(); x.fill();
+
+  // 一点星
+  for (let i = 0; i < 90; i++) {
+    const sx = Math.random() * w, sy = Math.random() * h * 0.4;
+    x.globalAlpha = Math.random() * 0.6;
+    x.fillStyle = '#fff';
+    x.fillRect(sx, sy, 2, 2);
+  }
+  x.globalAlpha = 1;
+
+  const im = new Image();
+  im.onload = () => adoptImage(im);
+  im.src = c.toDataURL('image/jpeg', 0.92);
+}
+
+/* ---------- 灵动岛参考框（按 iPhone 17 Pro Max 比例） ---------- */
+function applyIslandRef() {
+  const on = showIsland.checked;
+  islandBox.classList.toggle('on', on);
+  safeLine.classList.toggle('on', on);
+  if (!on) return;
+  islandBox.style.left   = '35.8%';
+  islandBox.style.top    = '1.15%';
+  islandBox.style.width  = '28.4%';
+  islandBox.style.height = '3.87%';
+}
+
+/* ---------- 导出 ---------- */
+function stamp() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+function fileName(ext) {
+  const modeTag = { black:'black', sample:'sample', custom:'color' }[state.mode];
+  return `DynamicIsland_${modeTag}_${state.hard}-${state.grad}_${state.curve}_${stamp()}.${ext}`;
+}
+function exportBlob(cb) {
+  const isJpeg = state.format === 'image/jpeg';
+  cvB.toBlob(b => cb(b), state.format, isJpeg ? state.quality / 100 : undefined);
+}
+
+$('downloadBtn').addEventListener('click', () => {
+  if (!img) return;
+  const ext = state.format === 'image/png' ? 'png' : 'jpg';
+  exportBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName(ext);
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast('已保存 ' + a.download);
+  });
+});
+
+$('copyBtn').addEventListener('click', async () => {
+  if (!img) return;
+  if (!navigator.clipboard || !window.ClipboardItem) { toast('这个浏览器不支持复制图片'); return; }
+  try {
+    exportBlob(async blob => {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+        toast('已复制，可以直接粘贴进聊天窗口');
+      } catch (_) { toast('复制被浏览器拦下了，改用下载吧'); }
+    });
+  } catch (_) { toast('复制失败，改用下载吧'); }
+});
+
+$('changeBtn').addEventListener('click', () => {
+  fileInput.value = '';
+  fileInput.click();
+});
+
+$('resetParams').addEventListener('click', () => {
+  Object.assign(state, DEFAULTS);
+  syncUI();
+  scheduleRender();
+  toast('参数已恢复默认');
+});
+
+/* ---------- UI 同步 ---------- */
+function syncUI() {
+  modeSel.value = state.mode;
+  strength.value = state.strength;
+  hard.value = state.hard;
+  grad.value = state.grad;
+  quality.value = state.quality;
+  formatSel.value = state.format;
+  ditherChk.checked = state.dither;
+  showIsland.checked = state.island;
+  customWrap.style.display = state.mode === 'custom' ? 'block' : 'none';
+  qualityWrap.style.display = state.format === 'image/png' ? 'none' : 'block';
+  qVal.textContent = state.quality + '%';
+  document.querySelectorAll('[data-curve]').forEach(b => b.classList.toggle('on', b.dataset.curve === state.curve));
+  document.querySelectorAll('[data-preset]').forEach(b => {
+    const p = PRESETS[b.dataset.preset];
+    b.classList.toggle('on', p.hard === state.hard && p.grad === state.grad);
+  });
+  modeHint.textContent = {
+    black : '纯黑最保险：任何壁纸都不会突兀。',
+    sample: '取壁纸顶部中间区域的均色，过渡最自然。',
+    custom: '自己挑一个颜色，适合和壁纸主色呼应。'
+  }[state.mode];
+  syncAllRanges();
+  drawCurve();
+  applyIslandRef();
+}
+
+/* ---------- 滑杆填充色 ---------- */
+function syncRange(el) {
+  if (!el || el.type !== 'range') return;
+  const min = +el.min || 0, max = +el.max || 100;
+  el.style.setProperty('--p', ((el.value - min) / (max - min) * 100).toFixed(2) + '%');
+}
+function syncAllRanges() { [strength, hard, grad, quality].forEach(syncRange); }
+
+/* ---------- 曲线缩略图 ---------- */
+function drawCurve() {
+  const fn = CURVES[state.curve], N = 48;
+  const pt = t => `${(t * 120).toFixed(2)},${((1 - fn(t)) * 40 + 4).toFixed(2)}`;
+  const pts = [];
+  for (let i = 0; i <= N; i++) pts.push(pt(i / N));
+  curveLine.setAttribute('d', 'M' + pts.join(' L'));
+  curveArea.setAttribute('d', 'M0,44 L' + pts.join(' L') + ' L120,44 Z');
+}
+
+/* ---------- 预设 ---------- */
+const PRESETS = {
+  light : { hard: 2.5, grad: 8 },
+  std   : { hard: 4.2, grad: 13 },
+  strong: { hard: 6.0, grad: 20 }
+};
+document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
+  const p = PRESETS[b.dataset.preset];
+  state.hard = p.hard; state.grad = p.grad;
+  syncUI(); scheduleRender();
+}));
+
+/* ---------- 控件事件 ---------- */
+modeSel.addEventListener('change', () => {
+  state.mode = modeSel.value;
+  customWrap.style.display = state.mode === 'custom' ? 'block' : 'none';
+  modeHint.textContent = {
+    black:'纯黑最保险：任何壁纸都不会突兀。',
+    sample:'取壁纸顶部中间区域的均色，过渡最自然。',
+    custom:'自己挑一个颜色，适合和壁纸主色呼应。'
+  }[state.mode];
+  scheduleRender();
+});
+customColor.addEventListener('input', scheduleRender);
+
+strength.addEventListener('input', () => { state.strength = +strength.value; scheduleRender(); });
+
+hard.addEventListener('input', () => {
+  state.hard = +hard.value;
+  if (state.hard >= state.grad) { state.grad = Math.min(60, state.hard + 1); grad.value = state.grad; }
+  markCustomPreset(); scheduleRender();
+});
+grad.addEventListener('input', () => {
+  state.grad = +grad.value;
+  if (state.grad <= state.hard) { state.hard = Math.max(0, state.grad - 1); hard.value = state.hard; }
+  markCustomPreset(); scheduleRender();
+});
+function markCustomPreset() {
+  document.querySelectorAll('[data-preset]').forEach(b => {
+    const p = PRESETS[b.dataset.preset];
+    b.classList.toggle('on', p.hard === state.hard && p.grad === state.grad);
+  });
+}
+
+document.querySelectorAll('[data-curve]').forEach(b => b.addEventListener('click', () => {
+  state.curve = b.dataset.curve;
+  document.querySelectorAll('[data-curve]').forEach(x => x.classList.toggle('on', x === b));
+  drawCurve(); scheduleRender();
+}));
+
+quality.addEventListener('input', () => { state.quality = +quality.value; qVal.textContent = state.quality + '%'; });
+formatSel.addEventListener('change', () => {
+  state.format = formatSel.value;
+  qualityWrap.style.display = state.format === 'image/png' ? 'none' : 'block';
+});
+showIsland.addEventListener('change', () => { state.island = showIsland.checked; applyIslandRef(); });
+ditherChk.addEventListener('change',  () => { state.dither = ditherChk.checked; scheduleRender(); });
+
+/* ---------- 上传入口 ---------- */
+dropzone.addEventListener('click', e => { if (e.target.tagName !== 'BUTTON') fileInput.click(); });
+$('demoBtn').addEventListener('click', e => { e.stopPropagation(); makeDemo(); });
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+['dragenter','dragover'].forEach(t => document.addEventListener(t, e => {
+  e.preventDefault(); dropzone.classList.add('over');
+}));
+document.addEventListener('dragleave', e => {
+  // 只有真正离开窗口时才取消高亮，避免在页面内部移动时闪烁
+  if (e.clientX <= 0 || e.clientY <= 0 ||
+      e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+    dropzone.classList.remove('over');
+  }
+});
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('over');
+  const f = e.dataTransfer && e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+document.addEventListener('paste', e => {
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (const it of items) {
+    if (it.type.indexOf('image') === 0) { loadFile(it.getAsFile()); break; }
+  }
+});
+
+/* ---------- 主题 ---------- */
+const THEMES = ['auto', 'dark', 'light'], THEME_ICON = { auto:'◐', dark:'🌙', light:'☀️' };
+let themeIdx = 0;
+try { themeIdx = Math.max(0, THEMES.indexOf(localStorage.getItem('dig-theme') || 'auto')); } catch (_) {}
+function applyTheme() {
+  const t = THEMES[themeIdx];
+  document.documentElement.setAttribute('data-theme', t);
+  $('themeIcon').textContent = THEME_ICON[t];
+  try { localStorage.setItem('dig-theme', t); } catch (_) {}
+}
+$('themeBtn').addEventListener('click', () => {
+  themeIdx = (themeIdx + 1) % THEMES.length;
+  applyTheme();
+  toast(['跟随系统', '深色', '浅色'][themeIdx]);
+});
+applyTheme();
+
+/* ---------- 记忆参数 ---------- */
+function saveState() {
+  try {
+    localStorage.setItem('dig-state', JSON.stringify({
+      mode: state.mode, strength: state.strength, hard: state.hard, grad: state.grad,
+      curve: state.curve, dither: state.dither, island: state.island,
+      format: state.format, quality: state.quality, color: customColor.value
+    }));
+  } catch (_) {}
+}
+(function loadState() {
+  try {
+    const raw = localStorage.getItem('dig-state');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    Object.assign(state, s);
+    if (s.color) customColor.value = s.color;
+  } catch (_) {}
+})();
+
+/* ---------- 信息栏 ---------- */
+function updateMeta() {
+  if (!img) return;
+  const h = img.height;
+  meta.innerHTML =
+    `原图 <b>${img.width} × ${img.height}</b> · ` +
+    `纯色 <b>${Math.round(h * state.hard / 100)}px</b> · ` +
+    `渐变收于 <b>${Math.round(h * state.grad / 100)}px</b> · ` +
+    `对比线 <b>${Math.round(splitPct)}%</b>`;
+}
+
+/* ---------- 窗口变化 ---------- */
+let rzTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(rzTimer);
+  rzTimer = setTimeout(layoutStage, 120);
+});
+
+/* ---------- 每次改动后自动记忆参数 · 同步滑杆填充 ---------- */
+['input', 'change'].forEach(t => document.addEventListener(t, e => {
+  saveState();
+  syncRange(e.target);
+}, true));
+
+/* ---------- 启动 ---------- */
+syncUI();
+tickClock();
+setInterval(tickClock, 20000);
+</script>
+</body>
+</html>
