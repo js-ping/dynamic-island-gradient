@@ -21,6 +21,11 @@ ROOT = os.path.dirname(HERE)
 SRC_DEFAULT = os.path.join(HERE, "使用说明.md")
 OUT_DEFAULT = os.path.join(ROOT, "使用说明.html")
 OUT_ALIAS = os.path.join(ROOT, "help.html")   # 英文名副本，手机上好输网址
+INDEX = os.path.join(ROOT, "index.html")
+
+# index.html 里内嵌说明书的注入标记（两个标记行会原样保留，只替换中间）
+MARK_BEGIN = "<!-- MANUAL:BEGIN"
+MARK_END = "<!-- MANUAL:END -->"
 
 
 # ---------------------------------------------------------------- 行内格式
@@ -58,7 +63,12 @@ def slug(text: str) -> str:
 
 
 # ---------------------------------------------------------------- 主体转换
-def convert(md: str) -> str:
+def convert(md: str, fragment: bool = False) -> str:
+    """把 markdown 转成 HTML。
+
+    fragment=False：返回完整的独立网页（带模板），用于 使用说明.html
+    fragment=True ：只返回正文片段，用于注入 index.html 的内嵌说明书抽屉
+    """
     lines = md.split("\n")
     out = []
     toc = []
@@ -89,6 +99,10 @@ def convert(md: str) -> str:
             sid = slug(m.group(2))
             if lvl == 1:
                 out.append('<h1 id="%s">%s</h1>' % (sid, body))
+            elif fragment:
+                out.append('<h%d id="%s">%s</h%d>' % (lvl, sid, body, lvl))
+                if lvl == 2:
+                    toc.append((sid, re.sub(r"<[^>]+>", "", body)))
             else:
                 out.append(
                     '<h%d id="%s"><a class="anchor" href="#%s">#</a>%s</h%d>'
@@ -204,6 +218,9 @@ def convert(md: str) -> str:
             body = body.replace("</h1>", "</h1>\n" + nav, 1)
         else:
             body = nav + body
+
+    if fragment:
+        return body
 
     return TPL.replace("{{BODY}}", body)
 
@@ -342,8 +359,8 @@ def main():
     with open(src, encoding="utf-8") as f:
         md = f.read()
 
+    # 1) 独立网页版
     page = convert(md)
-
     with open(out, "w", encoding="utf-8") as f:
         f.write(page)
 
@@ -354,8 +371,55 @@ def main():
         print("已生成：%s" % OUT_ALIAS)
 
     print("已生成：%s" % out)
+
+    # 2) 注入主程序，让 index.html 成为一个自包含的单文件程序
+    frag = convert(md, fragment=True)
+    ok = inject_index(frag)
+    if ok:
+        print("已注入：%s（内嵌说明书 %d 字符）" % (INDEX, len(frag)))
+
     print("源文件：%s（%.1f KB）" % (src, len(md.encode()) / 1024))
     return 0
+
+
+def inject_index(fragment: str) -> bool:
+    """把说明书正文片段塞进 index.html 的两个 MANUAL 标记之间。
+
+    两行标记本身会被完整保留，反复执行不会丢失。
+    """
+    if not os.path.exists(INDEX):
+        print("跳过注入：找不到 %s" % INDEX)
+        return False
+
+    with open(INDEX, encoding="utf-8") as f:
+        html = f.read()
+
+    begin = html.find(MARK_BEGIN)
+    if begin < 0:
+        print("跳过注入：index.html 里找不到 BEGIN 标记")
+        return False
+
+    # 找回 BEGIN 那一整行（到行尾），整行原样保留
+    begin_line_end = html.find("\n", begin)
+    if begin_line_end < 0:
+        print("跳过注入：BEGIN 标记没有独占一行")
+        return False
+    begin_line = html[begin:begin_line_end]
+
+    end = html.find(MARK_END, begin_line_end)
+    if end < 0:
+        print("跳过注入：index.html 里找不到 END 标记")
+        return False
+
+    new_html = (
+        html[:begin_line_end]      # 含 BEGIN 行
+        + "\n" + fragment + "\n"   # 生成的正文
+        + html[end:]               # 从 END 行开始原样保留
+    )
+
+    with open(INDEX, "w", encoding="utf-8") as f:
+        f.write(new_html)
+    return True
 
 
 if __name__ == "__main__":

@@ -42,18 +42,23 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 <img src="screenshots/desktop-dark.png" alt="界面截图">
 
+说明书也内嵌在里面，点一下从右侧滑出（不用联网、不用另开文件）：
+
+<img src="screenshots/manual-drawer.png" width="620" alt="内置说明书">
+
 ---
 
 ## 怎么用
 
-**不用装、不用配、不用联网。**
+**不用装、不用配、不用联网。整个程序就是一个文件。**
 
-1. 下载这个仓库（或只下载 `index.html`）
-2. **双击 `index.html`** —— 浏览器会打开工具
+1. 下载仓库里的 **`index.html`**（就这一个文件，65 KB）
+2. **双击它** —— 浏览器会打开工具
 3. 把壁纸拖进去，拖分割线调效果
 4. 点「下载壁纸」，传到 iPhone 设为锁屏
 
-> 想用在线版？仓库已开启 GitHub Pages，但**还需要在部署侧放行 `dynamic-island-gradient` 路径** —— 详见 [docs/版本说明.md](docs/版本说明.md#在线版待办)。
+> 说明书也内置在里面了，点顶栏的「说明书」按钮随时看。
+> 这一个文件可以随便拷到 U 盘、发微信、放到任何电脑上，双击即用。
 
 ---
 
@@ -129,8 +134,8 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 ```
 DynamicIslandGradient/
-├── index.html            ← 主程序（单文件，双击即用）
-├── 使用说明.html          ← 图文说明书（浏览器打开）
+├── index.html            ← 全部东西都在这里（单文件，双击即用）
+├── 使用说明.html          ← 同一份说明书的独立网页版（在线阅读方便）
 ├── help.html             ← 说明书英文名副本，手机上好输网址
 ├── 启动.command           ← 双击起本地服务器（想用手机访问时用）
 ├── README.md / README.en.md
@@ -138,11 +143,13 @@ DynamicIslandGradient/
 ├── LICENSE               ← MIT
 ├── docs/
 │   ├── 使用说明.md         ← 说明书内容源（唯一）
-│   ├── build_help.py     ← md → html 生成脚本（零依赖）
+│   ├── build_help.py     ← md → html + 注入 index.html（零依赖）
 │   ├── 生成说明书.command   ← 双击重新生成说明书
 │   └── 版本说明.md
 └── screenshots/
 ```
+
+**只有 `index.html` 是必需的，其他都是给你看/给你改的。**
 
 ---
 

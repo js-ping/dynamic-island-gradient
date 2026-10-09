@@ -320,6 +320,91 @@ footer{
   padding:22px 20px 30px;text-align:center;font-size:12px;color:var(--text-3);line-height:1.9;
 }
 footer a{color:var(--text-2)}
+
+/* ============ 内嵌说明书抽屉 ============ */
+#manual{position:fixed;inset:0;z-index:300;display:none}
+#manual.on{display:block}
+#manual .backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  animation:fadeIn .18s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#manual .sheet{
+  position:absolute;top:0;right:0;bottom:0;width:min(780px,94vw);
+  background:var(--bg);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;
+  box-shadow:-24px 0 60px rgba(0,0,0,.4);
+  animation:slideIn .26s var(--ease);
+}
+@keyframes slideIn{from{transform:translateX(28px);opacity:.5}to{transform:none;opacity:1}}
+@media(max-width:640px){#manual .sheet{width:100%;border-left:none}}
+#manual .bar{
+  display:flex;align-items:center;gap:12px;padding:12px 18px;flex:none;
+  border-bottom:1px solid var(--line);background:var(--panel);
+}
+#manual .bar b{font-size:14px;letter-spacing:-.01em}
+#manual .bar .spacer{flex:1}
+#manual .doc{flex:1;overflow:auto;padding:26px 32px 90px;font-size:14.5px;line-height:1.85;-webkit-overflow-scrolling:touch}
+@media(max-width:640px){#manual .doc{padding:18px 16px 80px}}
+#manual .doc h1{font-size:22px;line-height:1.35;margin:0 0 6px;letter-spacing:-.02em}
+#manual .doc h2{font-size:17.5px;margin:38px 0 12px;padding-top:18px;border-top:1px solid var(--line)}
+#manual .doc h3{font-size:15px;margin:24px 0 8px}
+#manual .doc h4{font-size:14px;margin:18px 0 6px;color:var(--text-2)}
+#manual .doc p{margin:10px 0}
+#manual .doc a{color:var(--accent);text-decoration:none}
+#manual .doc a:hover{text-decoration:underline}
+#manual .doc hr{border:none;border-top:1px solid var(--line);margin:26px 0}
+#manual .doc strong{font-weight:650}
+#manual .doc code{
+  background:var(--panel-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;
+  font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-word;
+}
+#manual .doc pre{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;overflow:auto;margin:14px 0;
+}
+#manual .doc pre code{background:none;border:none;padding:0;font-size:12px;line-height:1.8;color:var(--text-2)}
+#manual .doc blockquote{
+  margin:16px 0;padding:10px 16px;border-left:3px solid var(--accent);
+  background:color-mix(in srgb,var(--accent) 8%,transparent);
+  border-radius:0 8px 8px 0;color:var(--text-2);
+}
+#manual .doc blockquote p{margin:0}
+#manual .doc ul,#manual .doc ol{margin:10px 0;padding-left:22px}
+#manual .doc li{margin:5px 0}
+#manual .doc .tw{overflow-x:auto;margin:14px 0}
+#manual .doc table{border-collapse:collapse;width:100%;font-size:13px;background:var(--panel);border-radius:10px;overflow:hidden}
+#manual .doc th,#manual .doc td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+#manual .doc th{background:color-mix(in srgb,var(--accent) 10%,var(--panel));font-weight:650;font-size:12px;white-space:nowrap}
+#manual .doc tr:last-child td{border-bottom:none}
+#manual .doc .toc{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:14px 18px 8px;margin:22px 0 6px;
+}
+#manual .doc .toc b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+#manual .doc .toc ul{list-style:none;padding:0;margin:9px 0 6px;display:flex;flex-wrap:wrap;gap:6px 8px}
+#manual .doc .toc li{margin:0}
+#manual .doc .toc a{
+  display:inline-block;padding:3px 11px;border-radius:100px;font-size:12.5px;
+  background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--text-2);
+  border:1px solid var(--line);
+}
+#manual .doc .anchor{float:left;margin-left:-18px;opacity:0;color:var(--text-3);font-weight:400;text-decoration:none}
+#manual .doc h2:hover .anchor,#manual .doc h3:hover .anchor{opacity:.7}
+@media(max-width:640px){
+  #manual .doc .anchor{display:none}
+  #manual .doc table,#manual .doc thead,#manual .doc tbody,#manual .doc tr,#manual .doc td,#manual .doc th{display:block;width:100%}
+  #manual .doc thead{display:none}
+  #manual .doc table{background:none;border-radius:0}
+  #manual .doc tr{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;padding:4px 0;overflow:hidden}
+  #manual .doc td{border:none;border-bottom:1px dashed var(--line);padding:8px 12px;font-size:13px}
+  #manual .doc tr td:last-child{border-bottom:none}
+  #manual .doc td::before{
+    content:attr(data-label);display:block;font-size:10.5px;font-weight:650;
+    letter-spacing:.05em;color:var(--accent);margin-bottom:3px;
+  }
+}
 </style>
 </head>
 <body>
@@ -327,10 +412,10 @@ footer a{color:var(--text-2)}
 <header>
   <div class="brand">
     <div class="logo">◒</div>
-    <h1>灵动岛渐变工具<small>v2.0</small></h1>
+    <h1>灵动岛渐变工具<small>v2.1</small></h1>
   </div>
   <div class="spacer"></div>
-  <a class="tbtn" href="使用说明.html" target="_blank" rel="noopener">说明书</a>
+  <button class="tbtn" id="manualBtn">说明书</button>
   <button class="tbtn icon" id="themeBtn" title="切换主题">
     <span id="themeIcon">◐</span>
   </button>
@@ -496,11 +581,121 @@ footer a{color:var(--text-2)}
 
 <div id="toast"></div>
 
+<!-- ==================== 内嵌使用说明 ====================
+     内容由 docs/build_help.py 从 docs/使用说明.md 自动注入。
+     要改说明文字请改 md 文件，再双击 docs/生成说明书.command。
+     这里手改会在下次生成时被覆盖。
+=================================================================== -->
+<div id="manual" role="dialog" aria-modal="true" aria-label="使用说明">
+  <div class="backdrop" id="manualBackdrop"></div>
+  <div class="sheet">
+    <div class="bar">
+      <b>使用说明</b>
+      <div class="spacer"></div>
+      <button class="tbtn" id="manualClose">关闭 ⌄</button>
+    </div>
+    <div class="doc" id="manualDoc">
+<!-- MANUAL:BEGIN 自动生成区 · 勿手改 · 改 docs/使用说明.md -->
+<h1 id="灵动岛渐变工具-使用说明">灵动岛渐变工具 · 使用说明</h1>
+<nav class="toc"><b>目录</b><ul><li><a href="#一-这个工具解决什么问题">一、这个工具解决什么问题</a></li><li><a href="#二-30-秒上手">二、30 秒上手</a></li><li><a href="#三-界面总览">三、界面总览</a></li><li><a href="#四-每个参数是什么意思">四、每个参数是什么意思</a></li><li><a href="#五-操作小技巧">五、操作小技巧</a></li><li><a href="#六-常见问题-faq">六、常见问题 FAQ</a></li><li><a href="#七-数据安全声明">七、数据安全声明</a></li><li><a href="#八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</a></li></ul></nav>
+<blockquote>给壁纸顶部加一层渐变蒙版，让 iPhone 的灵动岛和状态栏自然融进画面。<br><strong>纯前端，零依赖。整个工具就是一个 <code>index.html</code> 文件，双击就能用。图片全程留在你自己的电脑里。</strong><br>本说明书已经内置在里面了 —— 点顶栏右上角的「说明书」按钮随时打开。</blockquote>
+<h2 id="一-这个工具解决什么问题">一、这个工具解决什么问题</h2>
+<p>iPhone 从 14 Pro 开始有了「灵动岛」—— 屏幕顶部中间一块永久的黑色药丸。</p>
+<p>问题是：如果你用一张明亮的照片当锁屏，顶部那块黑色硬件就会<strong>硬生生切</strong>在画面里，非常出戏。</p>
+<p>厂商给的做法是让壁纸顶部自动变暗，但系统只对自带壁纸做这件事，你自己下的图不管。</p>
+<p>这个工具就是干这件事的：<strong>在壁纸顶部盖一层从实到透的渐变</strong>，上端刚好糊住灵动岛和状态栏，往下平滑溶进原来的画面。看起来就像照片本来就是这么拍的。</p>
+<pre><code>原图                          处理后
+┌──────────────┐              ┌──────────────┐
+│  天空  ☀️      │              │▒▒▒▒▒▒▒▒▒▒▒▒▒▒│ ← 纯色区（盖住灵动岛）
+│              │   ──►        │▒▒▒▒▒▒▒▒▒▒▒▒▒▒│
+│              │              │▓▓▓▓▓▓▓▓▓▓▓▓▓▓│ ← 过渡区
+│   山  ⛰️      │              │  山  ⛰️       │ ← 原图不变
+└──────────────┘              └──────────────┘</code></pre>
+<hr>
+<h2 id="二-30-秒上手">二、30 秒上手</h2>
+<div class="tw"><table><thead><tr><th>步骤</th><th>做什么</th></tr></thead><tbody><tr><td data-label="步骤"><strong>1</strong></td><td data-label="做什么"><strong>双击 <code>index.html</code></strong>（就这一个文件），浏览器会打开工具</td></tr><tr><td data-label="步骤"><strong>2</strong></td><td data-label="做什么">把壁纸拖进页面（或点一下选文件，或按 <code>⌘V</code> 粘贴）</td></tr><tr><td data-label="步骤"><strong>3</strong></td><td data-label="做什么">左右拖动中间的白色分割线，对比处理前后</td></tr><tr><td data-label="步骤"><strong>4</strong></td><td data-label="做什么">满意了点「下载壁纸」，把文件传到 iPhone 设为锁屏</td></tr></tbody></table></div>
+<p><strong>没有素材想先看看效果？</strong> 点首页的「没有素材？用示例图试试」，会当场生成一张 1320×2868 的示例壁纸。</p>
+<blockquote><strong>只有一个文件，随便拷。</strong> 把 <code>index.html</code> 拷到 U 盘、发到微信、放到任何一台电脑上，双击就能用 —— 不需要联网，不需要装任何东西，也不需要旁边的其他文件。<br>想用手机打开？把文件放进 iCloud 云盘，用 Safari 打开即可。或者双击仓库里的 <code>启动.command</code>，手机连同一个 WiFi 访问终端显示的地址。</blockquote>
+<hr>
+<h2 id="三-界面总览">三、界面总览</h2>
+<pre><code>┌────────────────────────────────────────────────────────────┐
+│ 顶栏：说明书入口 · 主题切换（跟随系统 / 深色 / 浅色）          │
+├──────────────┬─────────────────────────────────────────────┤
+│              │   ┌────────┐   ┌────────┐                   │
+│  控制面板     │   │ 对比预览 │   │ 锁屏预览 │ ← 宽屏才有        │
+│  （左边一列）  │   │ 可拖动   │   │ 模拟实机 │                   │
+│              │   └────────┘   └────────┘                   │
+│              │   [下载] [复制] [换一张]   尺寸信息            │
+└──────────────┴─────────────────────────────────────────────┘</code></pre>
+<ul><li><strong>对比预览</strong>：左边是原图，右边是处理后，中间那条白线可以拖。</li><li><strong>锁屏预览</strong>：窗口够宽时自动出现，模拟 iPhone 锁屏的真实观感（时间是当前真实时间）。</li><li><strong>手机 / 窄窗口</strong>：控制面板会跑到下面，预览置顶。</li><li><strong>说明书</strong>：点顶栏的「说明书」，从右侧滑出内置说明；按 <code>Esc</code> 或点旁边空白处关闭。</li></ul>
+<hr>
+<h2 id="四-每个参数是什么意思">四、每个参数是什么意思</h2>
+<h3 id="渐变颜色">渐变颜色</h3>
+<div class="tw"><table><thead><tr><th>选项</th><th>说明</th><th>什么时候用</th></tr></thead><tbody><tr><td data-label="选项"><strong>纯黑（默认）</strong></td><td data-label="说明">用接近纯黑（RGB 8,10,12）覆盖</td><td data-label="什么时候用">万能选项，任何壁纸都不会突兀</td></tr><tr><td data-label="选项"><strong>同色采样</strong></td><td data-label="说明">自动取壁纸顶部中间区域的<strong>平均色</strong></td><td data-label="什么时候用">天空是蓝的、晚霞是橙的 —— 用这个过渡最自然</td></tr><tr><td data-label="选项"><strong>自定义颜色</strong></td><td data-label="说明">自己用取色器挑一个</td><td data-label="什么时候用">想跟画面主色呼应，或者做特殊色调</td></tr></tbody></table></div>
+<blockquote>采样是取「顶部中间三分之一」的矩形，缩放到 1×1 像素得到的<strong>平均值</strong>，所以不会被某一根树枝、某一颗星星带偏。</blockquote>
+<h3 id="覆盖强度">覆盖强度</h3>
+<p><code>0% ~ 100%</code>，默认 <strong>100%</strong>。</p>
+<p>控制最顶部那层的<strong>不透明度</strong>。</p>
+<ul><li><code>100%</code> = 完全盖住（推荐，灵动岛区域最干净）</li><li><code>60%~80%</code> = 只是压暗，还能隐约看到图片纹理</li><li>低于 <code>40%</code> = 只起到「加一点氛围」的作用</li></ul>
+<h3 id="完全覆盖高度">完全覆盖高度</h3>
+<p><code>0% ~ 30%</code>，默认 <strong>4.2%</strong>。右边实时显示<strong>当前这张图</strong>对应的像素值。</p>
+<p>这一段是<strong>纯色</strong>，从图片最顶上往下量。</p>
+<ul><li>iPhone 17 Pro Max 的状态栏 + 灵动岛，大约吃掉 <strong>4% ~ 6%</strong> 的高度</li><li>建议刚好盖住状态栏下沿就行，盖太多会显得头重脚轻</li><li>这里的百分比是按<strong>图片高度</strong>算的，所以不管你用 1320×2868 的原图还是缩放过的图，效果都一样</li></ul>
+<h3 id="渐变结束高度">渐变结束高度</h3>
+<p><code>1% ~ 60%</code>，默认 <strong>13%</strong>。</p>
+<p>纯色区下边缘到这个高度之间，颜色由<strong>实</strong>渐变到<strong>透</strong>。再往下就是原图。</p>
+<ul><li>这个值必须大于「完全覆盖高度」（拖到头会自动互相约束）</li><li><code>完全覆盖 4%</code> + <code>渐变结束 13%</code> → 大约 9% 的高度用来过渡，多数壁纸都合适</li><li>想要更强的一体感 → 拉到 20%~30%</li><li>想要克制、几乎看不出处理过 → 8%~12%</li></ul>
+<h3 id="过渡曲线">过渡曲线</h3>
+<p>决定颜色<strong>怎么</strong>散开。下面那张小图就是当前曲线的形状：<strong>线越靠上 = 覆盖越重</strong>。</p>
+<div class="tw"><table><thead><tr><th>曲线</th><th>手感</th><th>适用</th></tr></thead><tbody><tr><td data-label="曲线"><strong>缓出</strong>（默认）</td><td data-label="手感">一开始就快速散掉，覆盖感最轻</td><td data-label="适用">大多数情况</td></tr><tr><td data-label="曲线"><strong>线性</strong></td><td data-label="手感">从头到尾均匀过渡</td><td data-label="适用">想要绝对均匀的数学感</td></tr><tr><td data-label="曲线"><strong>缓入</strong></td><td data-label="手感">颜色往下探得更远，中段更实</td><td data-label="适用">顶部内容是纯色（天空/白墙）时很好看</td></tr><tr><td data-label="曲线"><strong>S 型</strong></td><td data-label="手感">两端都平缓，中间过渡最快</td><td data-label="适用">最柔和，几乎看不出交界</td></tr></tbody></table></div>
+<h3 id="辅助选项">辅助选项</h3>
+<div class="tw"><table><thead><tr><th>开关</th><th>作用</th></tr></thead><tbody><tr><td data-label="开关"><strong>显示灵动岛参考框</strong></td><td data-label="作用">在预览上叠一个虚线框，标出灵动岛的大概位置，以及「安全区」水平线。按 iPhone 17 Pro Max 的比例算，<strong>只作位置参考</strong>，不会画进导出的图片。</td></tr><tr><td data-label="开关"><strong>抗色带噪点</strong></td><td data-label="作用">在渐变区域叠一层肉眼不可见的极细噪点。深色渐变在 OLED 屏上容易出现一圈一圈的「色带」，这个开关能把它打散。默认开启，关掉也看不出区别。</td></tr></tbody></table></div>
+<h3 id="导出">导出</h3>
+<div class="tw"><table><thead><tr><th>项</th><th>说明</th></tr></thead><tbody><tr><td data-label="项"><strong>格式</strong></td><td data-label="说明">JPEG（体积小，推荐）/ PNG（无损，体积大）</td></tr><tr><td data-label="项"><strong>画质</strong></td><td data-label="说明">JPEG 专用，默认 95%。设壁纸 90% 以上足够，肉眼分不出</td></tr></tbody></table></div>
+<p>导出文件名会自动带上参数，方便你回溯：</p>
+<pre><code>DynamicIsland_black_4.2-13_easeout_20261009-1747.jpg
+              │      │      │        └─ 导出时间
+              │      │      └─ 曲线
+              │      └─ 完全覆盖% - 渐变结束%
+              └─ 颜色模式</code></pre>
+<h3 id="四个按钮">四个按钮</h3>
+<div class="tw"><table><thead><tr><th>按钮</th><th>作用</th></tr></thead><tbody><tr><td data-label="按钮"><strong>下载壁纸</strong></td><td data-label="作用">按原分辨率导出到「下载」文件夹</td></tr><tr><td data-label="按钮"><strong>复制到剪贴板</strong></td><td data-label="作用">直接复制图片，可以粘进聊天窗口 / 备忘录（Safari、Chrome 支持）</td></tr><tr><td data-label="按钮"><strong>换一张</strong></td><td data-label="作用">换一张壁纸，参数保留</td></tr><tr><td data-label="按钮"><strong>恢复默认参数</strong></td><td data-label="作用">所有参数回到初始值</td></tr></tbody></table></div>
+<hr>
+<h2 id="五-操作小技巧">五、操作小技巧</h2>
+<div class="tw"><table><thead><tr><th>操作</th><th>效果</th></tr></thead><tbody><tr><td data-label="操作">拖拽图片到页面</td><td data-label="效果">载入</td></tr><tr><td data-label="操作"><code>⌘V</code></td><td data-label="效果">粘贴剪贴板里的图片</td></tr><tr><td data-label="操作">拖中间的白色分割线</td><td data-label="效果">对比原图 / 处理后</td></tr><tr><td data-label="操作"><code>←</code> <code>→</code> 方向键</td><td data-label="效果">微调分割线位置（每次 2%）</td></tr><tr><td data-label="操作">点顶栏右边的圆钮</td><td data-label="效果">循环切换 跟随系统 → 深色 → 浅色</td></tr></tbody></table></div>
+<p><strong>参数会被记住。</strong> 下次打开工具，上次调的数值还在（存在浏览器本地，不上传）。</p>
+<hr>
+<h2 id="六-常见问题-faq">六、常见问题 FAQ</h2>
+<p><strong>Q：图太大/太多处理不动？</strong> A：不会。v2.0 换掉了逐像素的算法，改用浏览器原生的渐变合成，1320×2868 的原图拖滑杆也是实时出图。</p>
+<p><strong>Q：导出的图会变小吗？</strong> A：不会。导出就是原图的分辨率，一个像素都不缩。</p>
+<p><strong>Q：为什么我选了「同色采样」，顶部颜色和画面不太搭？</strong> A：采样取的是图片<strong>最顶部中间三分之一</strong>的平均色。如果你的壁纸顶部恰好有个深色物体（树枝、鸟），采样就会被它带偏。这时候改用「纯黑」或者手动「自定义颜色」更稳。</p>
+<p><strong>Q：HEIC 格式的壁纸打不开？</strong> A：Chrome 和 Firefox 解不了 HEIC。用 Safari 打开，或者先把图转成 JPG。工具会给出提示，不会静默失败。</p>
+<p><strong>Q：手机能用吗？</strong> A：能，两种办法： 一是把 <code>index.html</code> 存进 iCloud 云盘，用 iPhone 的「文件」App 点开、选 Safari 打开； 二是电脑上双击 <code>启动.command</code>，手机连同一个 WiFi，浏览器访问终端里显示的地址。 布局已经做了移动端适配。</p>
+<p><strong>Q：图片会被上传吗？</strong> A：不会。整个工具没有任何网络请求，代码里没有一行 <code>fetch</code> / <code>XMLHttpRequest</code>。你可以断网使用，也可以右键「查看源代码」自己核对。</p>
+<p><strong>Q：会不会把效果画错、或者污染原图？</strong> A：处理后的像素只写在上层画布上，原图所在的画布从不改动。下方「渐变结束高度」以外的像素，测试验证过与原图<strong>逐字节一致</strong>。</p>
+<hr>
+<h2 id="七-数据安全声明">七、数据安全声明</h2>
+<ul><li><strong>无网络请求</strong>：不联网、不上传、不埋点、不加载任何第三方资源（字体、图标库、统计脚本统统没有）。</li><li><strong>无本地留存</strong>：图片不会被写入磁盘。只有你的参数设置存在浏览器 <code>localStorage</code> 里，随时可以在浏览器设置里清掉。</li><li><strong>完全可审计</strong>：整个工具就是一个 <code>index.html</code>，你可以用任何文本编辑器打开，从头读到尾。</li><li><strong>开源</strong>：MIT 协议，随便改、随便用、随便分发。</li></ul>
+<hr>
+<h2 id="八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</h2>
+<div class="tw"><table><thead><tr><th>想改什么</th><th>改哪里</th></tr></thead><tbody><tr><td data-label="想改什么">颜色、圆角、字号</td><td data-label="改哪里"><code>index.html</code> 顶部 <code>&lt;style&gt;</code> 里的 CSS 变量（<code>:root</code> 段落）</td></tr><tr><td data-label="想改什么">默认参数</td><td data-label="改哪里">搜 <code>const DEFAULTS</code></td></tr><tr><td data-label="想改什么">预设档位（轻/标准/强）</td><td data-label="改哪里">搜 <code>const PRESETS</code></td></tr><tr><td data-label="想改什么">过渡曲线的数学形状</td><td data-label="改哪里">搜 <code>const CURVES</code></td></tr><tr><td data-label="想改什么">灵动岛参考框的位置</td><td data-label="改哪里">搜 <code>applyIslandRef</code>，里面是 4 个百分比</td></tr><tr><td data-label="想改什么"><strong>本说明书的内容</strong></td><td data-label="改哪里">改 <code>docs/使用说明.md</code>，再双击 <code>docs/生成说明书.command</code></td></tr></tbody></table></div>
+<blockquote>⚠️ <code>index.html</code> 里 <code>MANUAL:BEGIN</code> 与 <code>MANUAL:END</code> 两条注释之间是<strong>自动生成区</strong>，<br>手改会在下次生成时被覆盖。改说明文字请改 md 文件。</blockquote>
+<p>改完直接刷新浏览器即可，不需要编译、不需要重启。</p>
+<hr>
+<p><em>本说明书由 <code>docs/使用说明.md</code> 生成，改内容请改 md 文件，再双击 <code>docs/生成说明书.command</code>。</em></p>
+<!-- MANUAL:END -->
+    </div>
+  </div>
+</div>
+
 <script>
 "use strict";
 /* =========================================================================
- * 灵动岛渐变工具 v2.0
- * 纯前端 · 零依赖 · 全程本地处理
+ * 灵动岛渐变工具 v2.1
+ * 纯前端 · 零依赖 · 全程本地处理 · 单文件自包含
+ *
+ * 整个程序就是一个 index.html：样式、逻辑、数据、内嵌说明书全在里面，
+ * 没有任何外部请求。拷到任何地方双击就能用。
  *
  * 核心思路：不再逐像素遍历（1320×2868 会卡），改用 canvas 原生线性渐变
  *  + 64 级色标，把过渡曲线离散成停靠点，交给 GPU 合成，拖动滑杆即时出图。
@@ -724,7 +919,7 @@ stage.addEventListener('pointermove', e => { if (dragging) splitFromEvent(e); })
 stage.addEventListener('pointerup',   e => { dragging = false; try { stage.releasePointerCapture(e.pointerId); } catch (_) {} });
 stage.addEventListener('pointercancel', () => { dragging = false; });
 document.addEventListener('keydown', e => {
-  if (!img) return;
+  if (!img || $('manual').classList.contains('on')) return;
   if (e.key === 'ArrowLeft')  { setSplit(splitPct - 2); e.preventDefault(); }
   if (e.key === 'ArrowRight') { setSplit(splitPct + 2); e.preventDefault(); }
 });
@@ -1018,6 +1213,34 @@ $('themeBtn').addEventListener('click', () => {
   toast(['跟随系统', '深色', '浅色'][themeIdx]);
 });
 applyTheme();
+
+/* ---------- 内嵌说明书抽屉 ---------- */
+const manualEl = $('manual');
+function openManual() {
+  manualEl.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  $('manualClose').focus();
+  manualEl.querySelector('.doc').scrollTop = 0;
+}
+function closeManual() {
+  manualEl.classList.remove('on');
+  document.body.style.overflow = '';
+  $('manualBtn').focus();
+}
+$('manualBtn').addEventListener('click', openManual);
+$('manualClose').addEventListener('click', closeManual);
+$('manualBackdrop').addEventListener('click', closeManual);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && manualEl.classList.contains('on')) closeManual();
+});
+// 目录锚点：在抽屉内部平滑滚动，不改变地址栏
+manualEl.querySelector('.doc').addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  e.preventDefault();
+  const t = manualEl.querySelector(a.getAttribute('href'));
+  if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
 /* ---------- 记忆参数 ---------- */
 function saveState() {

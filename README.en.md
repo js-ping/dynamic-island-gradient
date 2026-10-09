@@ -44,19 +44,23 @@ Drag the split handle to compare before / after:
 
 <img src="screenshots/desktop-dark.png" alt="Interface">
 
+The manual is embedded too — one click slides it in, no network, no extra file:
+
+<img src="screenshots/manual-drawer.png" width="620" alt="Built-in manual">
+
 ---
 
 ## Usage
 
-**No install. No build. No network.**
+**No install. No build. No network. The whole program is one file.**
 
-1. Download the repo (or just `index.html`)
-2. **Double-click `index.html`** — it opens in your browser
+1. Download **`index.html`** from this repo (that's the only file, 65 KB)
+2. **Double-click it** — it opens in your browser
 3. Drop your wallpaper in, drag the split line to taste
 4. Hit "Download", AirDrop it to your iPhone, set as wallpaper
 
-> Want it online? GitHub Pages is enabled, but the `dynamic-island-gradient` path still needs to be
-> allowed on the hosting side — see [docs/版本说明.md](docs/版本说明.md#在线版待办).
+> The manual is embedded — click "说明书" in the header. This one file can be copied
+> to a USB stick, sent over chat, or dropped on any computer and used by double-clicking.
 
 ---
 
@@ -124,8 +128,8 @@ Result: dragging sliders on a 1320×2868 image is real-time.
 
 ```
 DynamicIslandGradient/
-├── index.html            ← the app (single file, double-click)
-├── 使用说明.html          ← illustrated manual (Chinese)
+├── index.html            ← everything lives here (single file, double-click)
+├── 使用说明.html          ← the same manual as a standalone page (Chinese)
 ├── help.html             ← manual, ASCII filename for phones
 ├── 启动.command           ← double-click to serve locally (LAN access)
 ├── README.md / README.en.md
@@ -134,6 +138,8 @@ DynamicIslandGradient/
 ├── docs/
 └── screenshots/
 ```
+
+**Only `index.html` is required — everything else is for reading or hacking on.**
 
 ---
 
