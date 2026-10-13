@@ -4,6 +4,85 @@
 
 ---
 
+## v2.2.1 — 2026-10-13
+
+**直接支持 iPhone 的 HEIC 照片：内置开源解码器，Chrome / Edge / Firefox 也能开。**
+
+### 背景：为什么这件事非做不可
+
+HEIC 里装的是 HEVC 编码，而 HEVC 有专利授权成本。Chrome、Edge、Firefox 都因此
+**刻意没有内置**解码器（它们把钱押在免授权的 AVIF 上），只有 Safari 靠 macOS / iOS
+的系统解码能力能读。
+
+而岛影的目标用户素材几乎全在 iPhone 上，**相机默认就是 HEIC** —— 一打开先撞一次
+「解不开」，等于把路堵死。v2.2.0 的说明书里给了三个绕行方案（改用 Safari / 把相机改成
+「兼容性最佳」/ 隔空投送时关掉「保留原格式」），但那都是让用户迁就工具。
+
+### 做法：两种形态，仓库保持干净
+
+| | 源码版 `index.html` | 完整版 `dist/Daoying-full-heic.html` |
+|---|---|---|
+| 大小 | 约 74 KB | 约 2.1 MB |
+| HEIC | 靠浏览器自带能力 | 内置解码器，**任何浏览器都能开** |
+| 许可证 | 纯 **MIT** | MIT + LGPL-3.0（仅解码器那一段） |
+| 在哪 | 仓库里，唯一需要维护的源文件 | 由 `tools/build_full.py` 拼出，发布到 Releases |
+
+`index.html` 里与解码器相关的代码全部由一个常量兜着：
+
+```js
+const HAS_HEIF = typeof window.libheif === 'function';
+```
+
+解码器不在时它是 `false`，所有与 HEIC 有关的分支都不会进入 —— **源码版的行为与加这一整块
+功能之前完全一致**。这样 MIT 的主文件永远不必背上 LGPL 代码。
+
+### 解码策略：浏览器优先，内置兜底
+
+1. 先让浏览器自己解 —— Safari 有系统级 HEVC 解码，秒开；
+2. `<img>` 报错（Chrome / Edge / Firefox 上的常态）→ 交给内置解码器；
+3. 万一某个浏览器「能载入却画成全黑」（历史上 Chrome 有过这种表现）→ 32×32 抽样发现是全黑，
+   同样改用内置解码器重来。抽样失败就当没问题，宁可不兜底也不误伤正常图片。
+
+多帧 HEIC 会优先取主图；解码完成后立刻调用 `frame.free()` 把 wasm 堆还回去
+（一张 6000×6000 的图，解码峰值在 200 MB 以上）。
+
+### 实测（Chrome 154.0.8037.99 / macOS，非无头）
+
+| 检查项 | 结果 |
+|---|---|
+| `ImageDecoder.isTypeSupported('image/heic')` | **false** |
+| `<img>` 载入 HEIC | **onerror**（干脆报错，不是静默黑图） |
+| 完整版解 6016×6016 / 20.7 MB HEIC | 成功，**2725 ms** |
+| 解码结果 | 6016×6016，平均 RGB 70（确认有画面，不是黑图） |
+| 处理后画布顶行 / 中部行 | RGB(10,12,14) / RGB(89,115,130) —— 渐变生效，下方保留原图 |
+| 导出分辨率 | 与原图 1:1，没有缩图 |
+| 普通 JPG（对照组） | 仍走原生 `<img>` 路径，无回归 |
+| `looksBlank` 兜底守卫 | 全黑 / 近黑判真，有内容的图判假 —— 四个断言全对 |
+| **网络请求** | **0 条**（钩了 `fetch` / `XMLHttpRequest` / `WebAssembly` / 资源加载） |
+
+### 依赖与许可证（主动披露）
+
+- 内置解码器是 **libheif-js 1.23.5** 的 `libheif-wasm` 构建（wasm 已 base64 内联），
+  **LGPL-3.0**；它内部用 libde265 做 HEVC 解码，同样是 LGPL。
+  出处、版本、SHA-256、升级步骤见 `tools/vendor/README.md`。
+- 两份许可证全文会**内联进产物**（放在 `<script type="text/plain" id="license-lgpl3">` 里，
+  不执行、只随文件传播），所以那个单文件被单独转发出去时，许可证是跟着走的。
+- HEVC 本身还涉及 **MPEG-LA / Access Advance** 两个专利池 —— 这正是 Google、Mozilla 当初
+  不内置 HEVC 的原因。本项目**不提供** HEVC 的专利许可，只是把开源解码器原样内联。
+- 构建脚本每次都做硬校验，任一条不过就直接失败：解码器里不能有 `</script`；
+  必须有内联的 `wasmBinary`（否则会把 `.wasm` 当外部文件去下载）；不能有
+  `WebSocket` / `sendBeacon` / `instantiateStreaming`；许可证文本里不能有 `</script` 或 `-->`。
+
+### 其他改动
+
+- 文件选择框的 `accept` 加上 `.heic,.heif` —— 否则 Windows 上这些文件在选择器里是灰的，根本选不中。
+- 首页支持列表里的 HEIC 那半句改成**按版本自适应**：带解码器显示 `/ HEIC`，
+  不带则显示「HEIC 原图需用 Safari 打开」。
+- 新增 `tools/` 目录：`build_full.py` + 双击入口（`.command` / `.bat`）+ `vendor/` 里的解码器与许可证。
+- 新增 `dist/`（构建产物，已加进 `.gitignore`，不进版本库）。
+
+---
+
 ## v2.2.0 — 2026-10-13
 
 **改名 + 正式支持 PC（Windows）。**

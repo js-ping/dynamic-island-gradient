@@ -66,20 +66,27 @@ The manual is embedded too — one click slides it in, no network, no extra file
 
 **No install. No build. No network. One file, works on Windows, macOS and Linux.**
 
-> **First: what about HEIC photos from an iPhone?**
+> **HEIC photos from an iPhone just work — no JPG conversion needed.**
 >
-> Decoding HEIC is the *browser's* job, not Daoying's — and Chrome / Edge / Firefox ship no
-> HEIC decoder (HEIC holds HEVC, which is patent-encumbered). Only **Safari** can decode it.
-> Measured on one machine, same 6016×2866 HEIC: Safari works, Chrome throws.
+> HEIC holds HEVC, which is patent-encumbered, so Chrome / Edge / Firefox **deliberately ship no**
+> decoder (they bet on royalty-free AVIF instead). Only Safari can read it, via the OS.
+> Daoying's audience shoots HEIC by default, so hitting a wall on the very first drag is a dead end.
 >
-> Three ways around it, pick any:
-> 1. **Open Daoying in Safari** (preinstalled on every Mac)
-> 2. **Switch the iPhone camera to JPG**: Settings → Camera → Formats → **Most Compatible**
-> 3. AirDrop to your Mac with **"Keep Originals" turned off** — macOS converts to JPG on the fly
+> Hence two builds with identical features, differing only in HEIC:
 >
-> Why not bundle a decoder so it just works everywhere? That would mean stuffing 1.5–2.5 MB
-> of HEVC decoder into a 65 KB single file, plus the patent licensing question. Being weighed —
-> **the answer will be posted here.**
+> | | Size | HEIC |
+> |---|---|---|
+> | **Full build** (recommended — what you get from Releases) | ~2 MB | Bundles an open-source decoder (libheif); **works in every browser** |
+> | **Source build** (`index.html` in this repo) | ~74 KB | Relies on the browser; only Safari can decode it |
+>
+> The bundled decoder only spins up when you actually drop a HEIC in. Every other format still goes
+> through the browser's native decoder, so nothing gets slower. (Safari is instant for HEIC too;
+> Chrome / Edge / Firefox took ~2.7 s for a 6000×6000 image on the test machine.)
+>
+> That bundled part is **LGPL-3.0** (libheif / libde265) and is the only non-MIT code in the full
+> build. Both licence texts are inlined inside the file, so forwarding that single file still carries
+> its licences. `index.html` itself stays a clean **MIT-only** source file.
+> See [`tools/README.md`](tools/README.md) for how the build works.
 
 ### Just want to use it
 
@@ -87,10 +94,14 @@ Grab a build from the **[Releases page](https://github.com/js-ping/dynamic-islan
 
 | Download | What it is |
 |---|---|
-| `Daoying-v2.2.0-single-file.html` | **Recommended** — one 67 KB file, double-click and go |
-| `Daoying-v2.2.0-Windows-macOS-Linux.zip` | Standalone app + both launchers + manual + README |
+| `Daoying-v2.2.1-full-heic.html` | **Recommended** — ~2 MB, bundles the HEIC decoder, **works in every browser** |
+| `Daoying-v2.2.1-single-file.html` | ~74 KB, MIT-only source build; HEIC needs Safari |
+| `Daoying-v2.2.1-Windows-macOS-Linux.zip` | Full build + both launchers + manual + third-party notice |
 
-Or clone the repo and use `index.html` directly — the contents are identical:
+> Rename either file however you like — it makes no difference.
+> Both are "double-click and go, no network, photos never leave your machine", copyable to a USB stick.
+
+Or clone the repo and use `index.html` (source build, no decoder):
 
 ```bash
 git clone https://github.com/js-ping/dynamic-island-gradient.git
@@ -118,8 +129,9 @@ Then:
 
 Chrome / Edge / Safari / Firefox and anything else modern — desktop or mobile.
 
-> The one exception is **HEIC** photos: Chrome / Edge / Firefox can't decode them
-> (Safari can). The tool says so explicitly rather than failing silently — convert to JPEG.
+> **HEIC** photos: the **full build** bundles a decoder and works in every browser;
+> the **source build** needs Safari. Either way the tool tells you explicitly when it
+> can't decode something rather than failing silently.
 
 ---
 
@@ -210,8 +222,9 @@ No — export is at the original resolution, pixel for pixel. JPEG quality
 defaults to 95% and is adjustable.
 
 **HEIC doesn't open?**
-Chrome and Firefox can't decode HEIC. Use Safari, or convert to JPEG first.
-The tool says so explicitly rather than failing silently.
+Depends which build you have. The **full build** bundles a decoder and works in every browser
+(a second or two slower in Chrome / Edge / Firefox); the **source build** needs Safari.
+Either way it tells you explicitly rather than failing silently.
 
 **Can I use it on my phone?**
 Yes. Double-click `启动.command` on your Mac, connect your phone to the same

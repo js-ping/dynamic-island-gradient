@@ -16,3 +16,8 @@ Makefile text eol=lf
 *.gif binary
 *.webp binary
 *.ico binary
+
+# 第三方 vendored 文件：必须字节原样，不允许任何行尾/编码转换。
+# libheif 的 wasm bundle 是两百多万字符的压缩产物，改一个字节就可能坏；
+# 许可证文本也要原样保留才算合规（tools/vendor/README.md 里记了 SHA-256）。
+tools/vendor/** -text

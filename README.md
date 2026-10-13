@@ -65,19 +65,25 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 **不用装、不用配、不用联网。Windows、Mac、Linux 通吃，整个程序就是一个文件。**
 
-> **先看这条：iPhone 照片是 HEIC 格式的怎么办？**
+> **HEIC 照片（iPhone 相机默认格式）直接支持，不用先转 JPG。**
 >
-> 解 HEIC 靠的是**浏览器**，不是岛影 —— 而 Chrome / Edge / Firefox 都没内置 HEIC 解码器
-> （HEIC 装的是 HEVC，有专利授权问题），只有 **Safari 能解**。
-> 本机实测（同一张 6016×2866 的 HEIC）：Safari 成功，Chrome 直接报错。
+> HEIC 里装的是 HEVC 编码，而 HEVC 有专利授权成本 —— Chrome / Edge / Firefox 都因此
+> **刻意没有内置**解码器（它们把钱押在免授权的 AVIF 上），只有 Safari 靠系统能力能读。
+> 而岛影的目标用户素材几乎全在 iPhone 上，一打开先撞一次「解不开」等于把路堵死。
 >
-> 所以现在有三个办法，任选：
-> 1. **用 Safari 打开**岛影（Mac 自带，不用装）
-> 2. **把 iPhone 相机格式改成 JPG**：设置 → 相机 → 格式 → **兼容性最佳**（一劳永逸）
-> 3. 在 iPhone 上**隔空投送到 Mac 时关掉「保留原格式」**，系统会自动转 JPG
+> 所以发布两种形态，功能一模一样，只差 HEIC：
 >
-> 为什么不做成「内置解码器」让人人能用？因为那要给 65 KB 的单文件塞进 1.5~2.5 MB 的
-> HEVC 解码器，还要处理专利授权 —— 正在权衡，**有结论会写在这里**。
+> | | 大小 | HEIC |
+> |---|---|---|
+> | **完整版**（推荐，Release 里下载到的就是它） | 约 2 MB | 内置开源解码器（libheif），**任何浏览器都能开** |
+> | **源码版**（仓库里的 `index.html`） | 约 74 KB | 靠浏览器自带能力，只有 Safari 能开 |
+>
+> 完整版只在你确实拖进 HEIC 时才启动解码器，其余格式仍走浏览器原生解码，速度一点不受影响
+> （Safari 上 HEIC 也是秒开；Chrome / Edge / Firefox 实测一张 6000×6000 的图约 2.7 秒）。
+>
+> 内置那段是 **LGPL-3.0**（libheif / libde265），是完整版里唯一非 MIT 的代码，
+> 两份许可证全文就贴在文件内部，所以单独转发那个文件也不缺许可证。
+> `index.html` 本身仍是干净的**纯 MIT 源码**。构建方式见 [`tools/README.md`](tools/README.md)。
 
 ### 只想直接用，不想克隆仓库
 
@@ -85,12 +91,14 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 | 下载 | 说明 |
 |---|---|
-| `Daoying-v2.2.0-single-file.html` | **推荐**，67 KB 一个文件，双击即用 |
-| `Daoying-v2.2.0-Windows-macOS-Linux.zip` | 单文件 + 两个双击启动脚本 + 说明书 + README |
+| `Daoying-v2.2.1-full-heic.html` | **推荐**，约 2 MB，内置 HEIC 解码器，**任何浏览器都能解 iPhone 原图** |
+| `Daoying-v2.2.1-single-file.html` | 约 74 KB，纯 MIT 源码版，HEIC 需要 Safari |
+| `Daoying-v2.2.1-Windows-macOS-Linux.zip` | 完整版 + 两个双击启动脚本 + 说明书 + 第三方组件说明 |
 
 > 下载后想改名随便改，叫 `岛影.html` 也行，不影响使用。
+> 两个单文件都是「双击即用、不联网、图片不出本机」，随便拷到 U 盘或发微信。
 
-或者克隆整个仓库，用里面的 `index.html`（内容完全一样）：
+或者克隆整个仓库，用里面的 `index.html`（源码版，不含解码器）：
 
 ```bash
 git clone https://github.com/js-ping/dynamic-island-gradient.git
@@ -117,8 +125,8 @@ git clone https://github.com/js-ping/dynamic-island-gradient.git
 
 Chrome / Edge / Safari / Firefox 等所有现代浏览器都可以，**桌面和手机都行**。
 
-> 唯一的例外：**HEIC 格式**的照片，Chrome / Edge / Firefox 解不开（Safari 可以）。
-> 遇到会明确提示，不会静默失败。转成 JPG 即可。
+> **HEIC 格式**的照片：**完整版**内置解码器，任何浏览器都能开；**源码版**需要 Safari。
+> 两种版本遇到解不动的都会明确提示，不会静默失败。
 
 ---
 
@@ -226,7 +234,8 @@ DynamicIslandGradient/
 不会。导出就是原图分辨率，一个像素都不缩。JPEG 画质默认 95%，可以在面板里调。
 
 **Q：HEIC 打不开？**
-Chrome / Edge / Firefox 都解不了 HEIC，只有 Safari 可以。工具会明确提示，不会静默失败 —— 先转成 JPG 即可。
+看你手上是哪份文件：**完整版**内置了解码器，任何浏览器都能开（Chrome / Edge / Firefox 上会多花一两秒）；
+**源码版**只有 Safari 能开，其他浏览器会明确提示，不会静默失败 —— 转成 JPG 即可。
 
 **Q：手机上能用吗？**
 能。两个办法：① 把 `index.html` 存进 iCloud / 网盘，用手机浏览器打开；

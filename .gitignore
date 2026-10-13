@@ -18,3 +18,6 @@ __pycache__/
 *.log
 /tmp/
 .tmp/
+
+# 构建产物（由 tools/build_full.py 拼出来，发布到 Releases，不进版本库）
+/dist/

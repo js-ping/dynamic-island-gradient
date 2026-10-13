@@ -426,7 +426,7 @@ footer a{color:var(--text-2)}
   <section id="dropzone">
     <div class="big">🖼️</div>
     <h2>把壁纸拖进来，或者点一下选择</h2>
-    <p>支持 JPG / PNG / WebP / BMP / HEIC（Safari）<br>
+    <p>支持 JPG / PNG / WebP / BMP / AVIF<span id="heicCap"></span><br>
        也可以直接按 <span class="kbd" id="kbdMod">⌘</span><span class="kbd">V</span> 粘贴剪贴板里的图</p>
     <div class="steps">
       <div><b>1</b> 放入壁纸</div>
@@ -436,7 +436,7 @@ footer a{color:var(--text-2)}
     <div style="margin-top:20px">
       <button class="tbtn" id="demoBtn" style="height:36px;padding:0 16px">没有素材？用示例图试试</button>
     </div>
-    <input type="file" id="fileInput" accept="image/*" hidden>
+    <input type="file" id="fileInput" accept="image/*,.heic,.heif" hidden>
   </section>
 
   <!-- 工作区 -->
@@ -599,7 +599,7 @@ footer a{color:var(--text-2)}
 <!-- MANUAL:BEGIN 自动生成区 · 勿手改 · 改 docs/使用说明.md -->
 <h1 id="岛影-使用说明">岛影 · 使用说明</h1>
 <nav class="toc"><b>目录</b><ul><li><a href="#一-这个工具解决什么问题">一、这个工具解决什么问题</a></li><li><a href="#二-30-秒上手">二、30 秒上手</a></li><li><a href="#三-界面总览">三、界面总览</a></li><li><a href="#四-每个参数是什么意思">四、每个参数是什么意思</a></li><li><a href="#五-操作小技巧">五、操作小技巧</a></li><li><a href="#六-常见问题-faq">六、常见问题 FAQ</a></li><li><a href="#七-数据安全声明">七、数据安全声明</a></li><li><a href="#八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</a></li></ul></nav>
-<blockquote>给壁纸顶部加一层渐变蒙版，让 iPhone 的灵动岛和状态栏自然融进画面。<br><strong>纯前端，零依赖。整个工具就是一个 <code>index.html</code> 文件，Windows / Mac 双击就能用。图片全程留在你自己的电脑里。</strong><br>本说明书已经内置在里面了 —— 点顶栏右上角的「说明书」按钮随时打开。</blockquote>
+<blockquote>给壁纸顶部加一层渐变蒙版，让 iPhone 的灵动岛和状态栏自然融进画面。<br><strong>纯前端，零依赖。整个工具就是一个 HTML 文件，Windows / Mac 双击就能用。图片全程留在你自己的电脑里。</strong><br>本说明书已经内置在里面了 —— 点顶栏右上角的「说明书」按钮随时打开。</blockquote>
 <h2 id="一-这个工具解决什么问题">一、这个工具解决什么问题</h2>
 <p>iPhone 从 14 Pro 开始有了「灵动岛」—— 屏幕顶部中间一块永久的黑色药丸。</p>
 <p>问题是：如果你用一张明亮的照片当锁屏，顶部那块黑色硬件就会<strong>硬生生切</strong>在画面里，非常出戏。</p>
@@ -616,11 +616,12 @@ footer a{color:var(--text-2)}
 <h2 id="二-30-秒上手">二、30 秒上手</h2>
 <div class="tw"><table><thead><tr><th>步骤</th><th>做什么</th></tr></thead><tbody><tr><td data-label="步骤"><strong>1</strong></td><td data-label="做什么"><strong>双击 <code>index.html</code></strong>（就这一个文件），浏览器会打开工具</td></tr><tr><td data-label="步骤"><strong>2</strong></td><td data-label="做什么">把壁纸拖进页面（或点一下选文件，或按 <code>⌘V</code> / <code>Ctrl+V</code> 粘贴）</td></tr><tr><td data-label="步骤"><strong>3</strong></td><td data-label="做什么">左右拖动中间的白色分割线，对比处理前后</td></tr><tr><td data-label="步骤"><strong>4</strong></td><td data-label="做什么">满意了点「下载壁纸」，把文件传到 iPhone 设为锁屏</td></tr></tbody></table></div>
 <p><strong>没有素材想先看看效果？</strong> 点首页的「没有素材？用示例图试试」，会当场生成一张 1320×2868 的示例壁纸。</p>
+<blockquote><strong>你手上这份是哪个版本？</strong> 岛影有两种形态，功能一模一样，只差 HEIC 支持：<br><strong>完整版</strong>（约 2 MB，发布页下载到的就是它）内置了解码器，任何浏览器都能开 HEIC；<br><strong>源码版</strong>（约 70 KB，仓库里的 <code>index.html</code>）不含解码器，HEIC 只有 Safari 能开。</blockquote>
 <h3 id="windows-用户看这里">Windows 用户看这里</h3>
 <p>Windows 和 Mac 上的用法<strong>完全一样</strong>，双击就开。只有一种情况需要多一步：</p>
 <p>如果双击 <code>index.html</code> 打开的是<strong>记事本</strong>而不是浏览器 —— 说明这台电脑把 <code>.html</code> 关联给了文本编辑器。三种解法任选：</p>
 <ol><li>右键 <code>index.html</code> →「打开方式」→ 选 Chrome / Edge → 勾上「始终使用此应用」；</li><li>双击同目录的 <strong><code>启动.bat</code></strong>（它会用系统默认浏览器打开）；</li><li>直接把 <code>index.html</code> 拖进已经打开的浏览器窗口。</li></ol>
-<blockquote><strong>哪个浏览器都行</strong>：Chrome / Edge / Firefox 都可以，不需要装任何插件。<br>唯一的例外是 <strong>HEIC 格式</strong>的照片，只有 Safari 能解 —— 遇到会明确提示，转成 JPG 即可。</blockquote>
+<blockquote><strong>哪个浏览器都行</strong>：Chrome / Edge / Firefox 都可以，不需要装任何插件。<br><strong>iPhone 直接拍出来的 HEIC 照片也直接支持。</strong> HEIC 里装的是 HEVC 编码，而 HEVC 有专利授权成本，<br>Chrome / Edge / Firefox 都选择不内置解码器，只有 Safari 靠系统能力能解。岛影的做法是<br><strong>先让浏览器自己解，解不动就用内置的开源解码器</strong>（libheif）兜底，所以哪个浏览器结果都一样。<br>只有仓库里那份 65 KB 的 <code>index.html</code> 源码版不含解码器，遇到 HEIC 时会提示你转成 JPG。</blockquote>
 <blockquote><strong>只有一个文件，随便拷。</strong> 把 <code>index.html</code> 拷到 U 盘、发到微信、放到任何一台电脑上，双击就能用 —— 不需要联网，不需要装任何东西，也不需要旁边的其他文件。<br>想用手机打开？把文件放进 iCloud / 网盘，用手机浏览器打开即可。或者在 Mac 上双击 <code>启动.command</code>，手机连同一个 WiFi 访问终端显示的地址。</blockquote>
 <hr>
 <h2 id="三-界面总览">三、界面总览</h2>
@@ -675,17 +676,19 @@ footer a{color:var(--text-2)}
 <p><strong>Q：图太大/太多处理不动？</strong> A：不会。v2.0 换掉了逐像素的算法，改用浏览器原生的渐变合成，1320×2868 的原图拖滑杆也是实时出图。</p>
 <p><strong>Q：导出的图会变小吗？</strong> A：不会。导出就是原图的分辨率，一个像素都不缩。</p>
 <p><strong>Q：为什么我选了「同色采样」，顶部颜色和画面不太搭？</strong> A：采样取的是图片<strong>最顶部中间三分之一</strong>的平均色。如果你的壁纸顶部恰好有个深色物体（树枝、鸟），采样就会被它带偏。这时候改用「纯黑」或者手动「自定义颜色」更稳。</p>
-<p><strong>Q：HEIC 格式的壁纸打不开？</strong> A：Chrome / Edge / Firefox 都解不了 HEIC，只有 Safari 可以。先把图转成 JPG 即可。工具会给出提示，不会静默失败。</p>
+<p><strong>Q：iPhone 拍的 HEIC 照片打不开？</strong> A：HEIC 是苹果的 HEVC 编码，而 HEVC 有专利授权成本 —— Chrome / Edge / Firefox 都选择不内置解码器，只有 Safari 靠系统能力能解。岛影的做法是<strong>先让浏览器自己解，解不动再动内置的开源解码器</strong>：</p>
+<div class="tw"><table><thead><tr><th>你手上的是哪份文件</th><th>HEIC 表现</th></tr></thead><tbody><tr><td data-label="你手上的是哪份文件"><strong>完整版</strong>（约 2 MB，内置解码器）</td><td data-label="HEIC 表现">任何浏览器都能直接开。Safari 秒开；Chrome / Edge / Firefox 上会多花一点时间 —— 实测一张 6000×6000 的图约 2.7 秒，iPhone 常见的 1200 万像素照片更快</td></tr><tr><td data-label="你手上的是哪份文件"><strong>源码版</strong>（65 KB，仓库里的 <code>index.html</code>）</td><td data-label="HEIC 表现">只有 Safari 能开；其他浏览器会明确提示「这个格式浏览器解不开」，转成 JPG 即可，不会静默失败</td></tr></tbody></table></div>
+<p>内置解码器只在你确实拖进 HEIC 时才启动，其他格式走的还是浏览器原生解码，速度一点不受影响。万一某个浏览器「能载入却画成全黑」（历史上 Chrome 有过这种表现），岛影还会抽样看一眼，发现是全黑就自动改用内置解码器重来。</p>
 <p><strong>Q：Windows 电脑上能用吗？</strong> A：能，和 Mac 上完全一样，双击 <code>index.html</code> 就开。唯一要留神的是：如果双击后打开的是记事本而不是浏览器， 说明这台电脑的 <code>.html</code> 关联被改过 —— 右键选「打开方式」指定 Chrome / Edge，或者双击同目录的 <code>启动.bat</code>。</p>
 <p><strong>Q：手机能用吗？</strong> A：能，两种办法： 一是把 <code>index.html</code> 存进 iCloud / 网盘，用手机浏览器打开； 二是 Mac 上双击 <code>启动.command</code>，手机连同一个 WiFi，浏览器访问终端里显示的地址。 布局已经做了移动端适配。</p>
 <p><strong>Q：图片会被上传吗？</strong> A：不会。整个工具没有任何网络请求，代码里没有一行 <code>fetch</code> / <code>XMLHttpRequest</code>。你可以断网使用，也可以右键「查看源代码」自己核对。</p>
 <p><strong>Q：会不会把效果画错、或者污染原图？</strong> A：处理后的像素只写在上层画布上，原图所在的画布从不改动。下方「渐变结束高度」以外的像素，测试验证过与原图<strong>逐字节一致</strong>。</p>
 <hr>
 <h2 id="七-数据安全声明">七、数据安全声明</h2>
-<ul><li><strong>无网络请求</strong>：不联网、不上传、不埋点、不加载任何第三方资源（字体、图标库、统计脚本统统没有）。</li><li><strong>无本地留存</strong>：图片不会被写入磁盘。只有你的参数设置存在浏览器 <code>localStorage</code> 里，随时可以在浏览器设置里清掉。</li><li><strong>完全可审计</strong>：整个工具就是一个 <code>index.html</code>，你可以用任何文本编辑器打开，从头读到尾。</li><li><strong>开源</strong>：MIT 协议，随便改、随便用、随便分发。</li></ul>
+<ul><li><strong>无网络请求</strong>：不联网、不上传、不埋点、不加载任何第三方资源（字体、图标库、统计脚本统统没有）。内置的 HEIC 解码器也一样 —— 它的 WebAssembly 是内联在文件里的，实测整个解码过程零请求（记录见 <code>docs/版本说明.md</code>）。断网可用，也可以右键「查看源代码」自己核对。</li><li><strong>无本地留存</strong>：图片不会被写入磁盘。只有你的参数设置存在浏览器 <code>localStorage</code> 里，随时可以在浏览器设置里清掉。</li><li><strong>完全可审计</strong>：整个工具就是一个 HTML 文件，你可以用任何文本编辑器打开，从头读到尾。完整版里唯一一段第三方代码是 HEIC 解码器，被单独装在一个 <code>&lt;script id=&quot;heif-decoder&quot;&gt;</code> 里，许可证全文就贴在这个文件内部。</li><li><strong>开源</strong>：岛影自己是 MIT 协议，随便改、随便用、随便分发。内置的 HEIC 解码器（libheif / libde265）是 <strong>LGPL-3.0</strong>，是完整版里唯一一段非 MIT 的代码，出处、版本和校验值记在 <code>tools/vendor/README.md</code>。</li></ul>
 <hr>
 <h2 id="八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</h2>
-<div class="tw"><table><thead><tr><th>想改什么</th><th>改哪里</th></tr></thead><tbody><tr><td data-label="想改什么">颜色、圆角、字号</td><td data-label="改哪里"><code>index.html</code> 顶部 <code>&lt;style&gt;</code> 里的 CSS 变量（<code>:root</code> 段落）</td></tr><tr><td data-label="想改什么">默认参数</td><td data-label="改哪里">搜 <code>const DEFAULTS</code></td></tr><tr><td data-label="想改什么">预设档位（轻/标准/强）</td><td data-label="改哪里">搜 <code>const PRESETS</code></td></tr><tr><td data-label="想改什么">过渡曲线的数学形状</td><td data-label="改哪里">搜 <code>const CURVES</code></td></tr><tr><td data-label="想改什么">灵动岛参考框的位置</td><td data-label="改哪里">搜 <code>applyIslandRef</code>，里面是 4 个百分比</td></tr><tr><td data-label="想改什么"><strong>本说明书的内容</strong></td><td data-label="改哪里">改 <code>docs/使用说明.md</code>，再双击 <code>docs/生成说明书.command</code>（Windows 用 <code>docs/生成说明书.bat</code>）</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th>想改什么</th><th>改哪里</th></tr></thead><tbody><tr><td data-label="想改什么">颜色、圆角、字号</td><td data-label="改哪里"><code>index.html</code> 顶部 <code>&lt;style&gt;</code> 里的 CSS 变量（<code>:root</code> 段落）</td></tr><tr><td data-label="想改什么">默认参数</td><td data-label="改哪里">搜 <code>const DEFAULTS</code></td></tr><tr><td data-label="想改什么">预设档位（轻/标准/强）</td><td data-label="改哪里">搜 <code>const PRESETS</code></td></tr><tr><td data-label="想改什么">过渡曲线的数学形状</td><td data-label="改哪里">搜 <code>const CURVES</code></td></tr><tr><td data-label="想改什么">灵动岛参考框的位置</td><td data-label="改哪里">搜 <code>applyIslandRef</code>，里面是 4 个百分比</td></tr><tr><td data-label="想改什么"><strong>本说明书的内容</strong></td><td data-label="改哪里">改 <code>docs/使用说明.md</code>，再双击 <code>docs/生成说明书.command</code>（Windows 用 <code>docs/生成说明书.bat</code>）</td></tr><tr><td data-label="想改什么"><strong>重新打包「完整版」</strong></td><td data-label="改哪里">双击 <code>tools/生成完整版.command</code>（Windows 用 <code>tools/生成完整版.bat</code>）。会把 <code>tools/vendor/</code> 里的 HEIC 解码器拼进 <code>index.html</code>，产出 <code>dist/Daoying-full-heic.html</code></td></tr><tr><td data-label="想改什么"><strong>换一个 HEIC 解码器版本</strong></td><td data-label="改哪里">见 <code>tools/vendor/README.md</code>，里面有升级步骤和必须重跑的验证用例</td></tr></tbody></table></div>
 <blockquote>⚠️ <code>index.html</code> 里 <code>MANUAL:BEGIN</code> 与 <code>MANUAL:END</code> 两条注释之间是<strong>自动生成区</strong>，<br>手改会在下次生成时被覆盖。改说明文字请改 md 文件。</blockquote>
 <p>改完直接刷新浏览器即可，不需要编译、不需要重启。</p>
 <hr>
@@ -694,6 +697,9 @@ footer a{color:var(--text-2)}
     </div>
   </div>
 </div>
+
+<!-- DECODER:BEGIN 自动生成区 · 勿手改 · 由 tools/build_full.py 注入 HEIC 解码器 -->
+<!-- DECODER:END -->
 
 <script>
 "use strict";
@@ -770,6 +776,12 @@ function toast(msg) {
   toastEl.classList.add('on');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toastEl.classList.remove('on'), 2000);
+}
+/* 不自动消失的提示：解码大图要好几秒，中途提示不能先跑了 */
+function toastHold(msg) {
+  clearTimeout(toastTimer);
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
 }
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
@@ -931,7 +943,97 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') { setSplit(splitPct + 2); e.preventDefault(); }
 });
 
+/* =========================================================================
+ * HEIC / HEIF 解码
+ * -------------------------------------------------------------------------
+ * HEIC 这个容器里装的是 HEVC 编码的画面，而 HEVC 有专利授权成本 ——
+ * Chrome、Edge、Firefox 都选择不内置解码器，只有 Safari 靠系统能力能解。
+ * 所以「完整版」把开源的 libheif + libde265 编译成 wasm 内联了进来
+ * （见 tools/README.md）。
+ *
+ * 下面这一整段在两种情况下都安全：
+ *   · 文件里带了解码器 → HEIC 交给内置解码器，任何浏览器结果一致；
+ *   · 文件里没带（仓库里的 65 KB 源码版）→ HAS_HEIF 为 false，
+ *     所有分支都不会进入，行为与加解码器之前一模一样。
+ * ========================================================================= */
+const HAS_HEIF = (typeof window !== 'undefined') && typeof window.libheif === 'function';
+const isHeicFile = f => /^image\/(heic|heif)$/i.test(f.type) || /\.(heic|heif)$/i.test(f.name);
+
+// 顶部支持列表里 HEIC 那半句，按「这个文件带没带解码器」自适应
+(function () {
+  const cap = document.getElementById('heicCap');
+  if (cap) cap.textContent = HAS_HEIF ? ' / HEIC' : '（HEIC 原图需用 Safari 打开）';
+})();
+
+let heifModPromise = null;
+function heifModule() {
+  // 坑：libheif 浏览器版导出的是个 Emscripten 工厂函数，
+  // 必须先 await 一次才拿到模块本体。直接 new libheif.HeifDecoder() 会报
+  // “HeifDecoder is not a constructor”。
+  if (!heifModPromise) heifModPromise = Promise.resolve().then(() => window.libheif());
+  return heifModPromise;
+}
+
+/* 解一张 HEIC，产出 canvas。
+ * 用 canvas 而不是 <img>，是因为 canvas 同样能被 drawImage、
+ * 同样带 .width / .height —— 上层所有代码一行都不用改。 */
+async function decodeHeic(file) {
+  const mod = await heifModule();
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const frames = new mod.HeifDecoder().decode(bytes);
+  if (!frames || !frames.length) throw new Error('empty');
+
+  let frame = frames[0];
+  for (const f of frames) {                       // 多帧时优先取主图
+    try { if (f.is_primary()) { frame = f; break; } } catch (_) {}
+  }
+  const w = frame.get_width(), h = frame.get_height();
+  if (!w || !h) throw new Error('bad size');
+
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const c2d = cv.getContext('2d');
+  const id = c2d.createImageData(w, h);
+  await new Promise((ok, no) => frame.display(id, d => d ? ok() : no(new Error('decode failed'))));
+  c2d.putImageData(id, 0, 0);
+
+  // 一张 6000×6000 的图解码峰值能到 200MB 以上，用完立刻把 wasm 那边的内存还回去
+  for (const f of frames) { try { f.free(); } catch (_) {} }
+  return cv;
+}
+
 /* ---------- 载入图片 ---------- */
+let decoding = false;
+
+/* 解不出画面时的兜底：交给内置解码器 */
+function decodeWithBuiltin(file) {
+  if (decoding) { toast('上一张还在解析，稍等一下'); return; }
+  decoding = true;
+  toastHold('正在用内置解码器解析 HEIC…');
+  document.body.style.cursor = 'progress';
+  const done = () => { decoding = false; document.body.style.cursor = ''; };
+  decodeHeic(file)
+    .then(cv => { done(); adoptImage(cv); toast(`${cv.width} × ${cv.height} · 已载入`); })
+    .catch(()  => { done(); toast('这张 HEIC 解不开，试试转成 JPG'); });
+}
+
+/* 缩到 32×32 采样，看这张图是不是「一片纯黑」。
+ * 用来兜住一种历史坑：某些 Chrome 版本能把 HEIC 载进 <img>，
+ * 尺寸也对，但画出来全是黑的 —— 不报错，纯静默失败，最难查。
+ * 采样失败就当作没问题，宁可不兜底也不能误伤正常图片。 */
+function looksBlank(source) {
+  try {
+    const n = 32, c = document.createElement('canvas');
+    c.width = c.height = n;
+    const x = c.getContext('2d');
+    x.drawImage(source, 0, 0, source.width, source.height, 0, 0, n, n);
+    const d = x.getImageData(0, 0, n, n).data;
+    let max = 0;
+    for (let i = 0; i < d.length; i += 4) max = Math.max(max, d[i], d[i + 1], d[i + 2]);
+    return max < 8;
+  } catch (_) { return false; }
+}
+
 function loadFile(file) {
   if (!file) return;
   if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp|heic|heif|bmp|avif)$/i.test(file.name)) {
@@ -939,15 +1041,22 @@ function loadFile(file) {
   }
   if (file.size > 60 * 1024 * 1024) { toast('图片超过 60MB，先压缩一下'); return; }
 
+  /* HEIC 的策略：先让浏览器自己解，解不动再动内置解码器。
+     实测 Chrome 154 / macOS：ImageDecoder.isTypeSupported('image/heic') 为 false，
+     <img> 直接 onerror —— 报错得很干净，不会静默出错；而 Safari 有系统级 HEVC
+     解码，秒开。所以「浏览器优先」既快又稳，内置解码器负责兜住解不了的那些。
+     没带解码器的 65 KB 源码版走到这里，行为跟以前完全一样：提示转 JPG。 */
   const url = URL.createObjectURL(file);
   const im = new Image();
   im.onload = () => {
     URL.revokeObjectURL(url);
+    if (HAS_HEIF && isHeicFile(file) && looksBlank(im)) { decodeWithBuiltin(file); return; }
     adoptImage(im);
     toast(`${im.width} × ${im.height} · 已载入`);
   };
   im.onerror = () => {
     URL.revokeObjectURL(url);
+    if (HAS_HEIF && isHeicFile(file)) { decodeWithBuiltin(file); return; }
     toast('这个格式浏览器解不开，试试转成 JPG');
   };
   im.src = url;
