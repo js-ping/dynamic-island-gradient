@@ -15,8 +15,7 @@ Dynamic Island and status bar blend into the picture instead of slicing it.
 
 [简体中文](README.md) · English
 
-<img src="screenshots/example-before.jpg" width="240" alt="Before">
-<img src="screenshots/example-after.jpg" width="240" alt="After">
+<img src="screenshots/hero.jpg" width="880" alt="Two real wallpapers inside official iPhone 17 Pro Max bezels — the top gradient blends the Dynamic Island into the picture">
 
 </div>
 
@@ -40,6 +39,18 @@ the top of the wallpaper.
 │   mountains   │         │   mountains   │  ← original, untouched
 └──────────────┘         └──────────────┘
 ```
+
+Two **device-accurate** comparisons — left is the original, where the black
+Dynamic Island visibly slices the picture; right is after the mask, where it
+blends in and even the lock-screen clock reads better.
+
+<img src="screenshots/compare-portrait.jpg" alt="Beach portrait: left is the original with a bright blue sky behind the island; right is after the mask">
+
+<img src="screenshots/compare-rain.jpg" alt="Rainy street at dusk: left is the original, right is after the mask">
+
+> Device bezels are from Apple Design Resources (iPhone 17 Pro Max), used solely
+> to depict a mock-up. That image is © Apple Inc. and is **not** covered by this
+> project's MIT licence.
 
 Drag the split handle to compare before / after:
 

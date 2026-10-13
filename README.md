@@ -14,8 +14,7 @@
 
 简体中文 · [English](README.en.md)
 
-<img src="screenshots/example-before.jpg" width="240" alt="原图">
-<img src="screenshots/example-after.jpg" width="240" alt="处理后">
+<img src="screenshots/hero.jpg" width="880" alt="岛影效果：两张真实壁纸放进 iPhone 17 Pro Max 官方机身，顶部渐变已与灵动岛融合">
 
 </div>
 
@@ -42,6 +41,15 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 │   山  ⛰️       │         │   山  ⛰️      │  ← 原图一个像素都不动
 └──────────────┘         └──────────────┘
 ```
+
+下面是两张**真机比例**的效果对比 —— 左：原图，黑色灵动岛硬生生切在画面里；右：处理后，顶部渐变把它融进画面，连锁屏时间都看得更清了。
+
+<img src="screenshots/compare-portrait.jpg" alt="海边人像：左为原图，顶部亮蓝色天空让灵动岛格外突兀；右为处理后，渐变让灵动岛融进画面">
+
+<img src="screenshots/compare-rain.jpg" alt="雨夜街景：左为原图，右为处理后">
+
+> 示例机身取自 Apple Design Resources（iPhone 17 Pro Max），仅用于效果演示。
+> 该机身图片版权归 Apple Inc. 所有，不在本项目的 MIT 许可范围内。
 
 界面直接拖动分割线就能对比前后：
 
