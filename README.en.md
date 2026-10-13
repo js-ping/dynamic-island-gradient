@@ -66,16 +66,20 @@ The manual is embedded too — one click slides it in, no network, no extra file
 
 **No install. No build. No network. One file, works on Windows, macOS and Linux.**
 
-### Fastest path: use it online
-
-**→ [uppjs.com/daoying.html](https://uppjs.com/daoying.html)**
-
-Nothing to download — open it in a browser, drop a photo in, tune the gradient, export.
-It runs the *same code* as the single-file build, entirely inside your browser:
-your image is never uploaded and the page never talks to the network
-(pull your cable and check).
-
-Want something you can keep on the desktop and run fully offline? Read on.
+> **First: what about HEIC photos from an iPhone?**
+>
+> Decoding HEIC is the *browser's* job, not Daoying's — and Chrome / Edge / Firefox ship no
+> HEIC decoder (HEIC holds HEVC, which is patent-encumbered). Only **Safari** can decode it.
+> Measured on one machine, same 6016×2866 HEIC: Safari works, Chrome throws.
+>
+> Three ways around it, pick any:
+> 1. **Open Daoying in Safari** (preinstalled on every Mac)
+> 2. **Switch the iPhone camera to JPG**: Settings → Camera → Formats → **Most Compatible**
+> 3. AirDrop to your Mac with **"Keep Originals" turned off** — macOS converts to JPG on the fly
+>
+> Why not bundle a decoder so it just works everywhere? That would mean stuffing 1.5–2.5 MB
+> of HEVC decoder into a 65 KB single file, plus the patent licensing question. Being weighed —
+> **the answer will be posted here.**
 
 ### Just want to use it
 
