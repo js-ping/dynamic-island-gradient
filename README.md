@@ -1,6 +1,6 @@
 <div align="center">
 
-# 灵动岛渐变工具
+# 岛影
 
 **Dynamic Island Gradient**
 
@@ -10,7 +10,7 @@
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)]()
 [![No Network](https://img.shields.io/badge/network-none-blue.svg)]()
 [![Single File](https://img.shields.io/badge/build-one%20HTML%20file-orange.svg)]()
-[![Platform](https://img.shields.io/badge/platform-any%20modern%20browser-lightgrey.svg)]()
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)]()
 
 简体中文 · [English](README.en.md)
 
@@ -21,13 +21,18 @@
 
 ---
 
+> **名字的来历**：壁纸顶部那层暗部，像水面给画面投下的影子；灵动岛融进去，
+> 就像它本来就在照片里。「岛影」也谐音「倒影」。
+
+---
+
 ## 问题是这样的
 
 iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的黑色药丸。
 
 如果你用一张明亮的照片当锁屏，顶部那块黑色硬件就会**硬生生切**在画面里。苹果自己的壁纸会做顶部压暗处理，你自己下的图不管。
 
-**灵动岛渐变工具只做一件事**：在壁纸顶部盖一层从实到透的渐变。
+**岛影只做一件事**：在壁纸顶部盖一层从实到透的渐变。
 
 ```
 ┌──────────────┐         ┌──────────────┐
@@ -50,15 +55,29 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 ## 怎么用
 
-**不用装、不用配、不用联网。整个程序就是一个文件。**
+**不用装、不用配、不用联网。Windows、Mac、Linux 通吃，整个程序就是一个文件。**
 
-1. 下载仓库里的 **`index.html`**（就这一个文件，65 KB）
-2. **双击它** —— 浏览器会打开工具
-3. 把壁纸拖进去，拖分割线调效果
-4. 点「下载壁纸」，传到 iPhone 设为锁屏
+| 系统 | 怎么开 | 说明 |
+|---|---|---|
+| **Windows** | 双击 `index.html` | 如果被记事本打开了，改用右键 →「打开方式」→ 你的浏览器；或者双击 `启动.bat` |
+| **macOS** | 双击 `index.html` | 默认浏览器直接打开。想要手机同 WiFi 访问，双击 `启动.command` |
+| **Linux** | 双击 `index.html` | 或 `xdg-open index.html` |
+
+然后：
+
+1. 把壁纸拖进页面（或点一下选文件，或按 `Ctrl+V` / `⌘V` 粘贴）
+2. 左右拖动中间的白色分割线，对比处理前后
+3. 点「下载壁纸」，传到 iPhone 设为锁屏
 
 > 说明书也内置在里面了，点顶栏的「说明书」按钮随时看。
-> 这一个文件可以随便拷到 U 盘、发微信、放到任何电脑上，双击即用。
+> 这一个文件可以随便拷到 U 盘、发微信、放到任何电脑上，双击即用 —— **不需要旁边的任何文件**。
+
+### 支持的浏览器
+
+Chrome / Edge / Safari / Firefox 等所有现代浏览器都可以，**桌面和手机都行**。
+
+> 唯一的例外：**HEIC 格式**的照片，Chrome / Edge / Firefox 解不开（Safari 可以）。
+> 遇到会明确提示，不会静默失败。转成 JPG 即可。
 
 ---
 
@@ -134,10 +153,11 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 ```
 DynamicIslandGradient/
-├── index.html            ← 全部东西都在这里（单文件，双击即用）
+├── index.html            ← 全部东西都在这里（单文件，双击即用，三平台通吃）
+├── 启动.bat               ← Windows 双击入口（万一 html 被记事本抢走关联时用）
+├── 启动.command           ← macOS 双击入口（也可起本地服务器给手机访问）
 ├── 使用说明.html          ← 同一份说明书的独立网页版（在线阅读方便）
 ├── help.html             ← 说明书英文名副本，手机上好输网址
-├── 启动.command           ← 双击起本地服务器（想用手机访问时用）
 ├── README.md / README.en.md
 ├── CHANGELOG.md
 ├── LICENSE               ← MIT
@@ -155,14 +175,21 @@ DynamicIslandGradient/
 
 ## 常见问题
 
+**Q：Windows 上双击打不开 / 打开了记事本？**
+说明这台电脑把 `.html` 关联给了文本编辑器。三种解法任选：
+① 右键 `index.html` →「打开方式」→ 选 Chrome / Edge，勾上「始终使用」；
+② 双击同目录的 `启动.bat`（它会用系统默认浏览器打开）；
+③ 把 `index.html` 直接拖进浏览器窗口。
+
 **Q：导出的图会不会被压缩、变小？**
 不会。导出就是原图分辨率，一个像素都不缩。JPEG 画质默认 95%，可以在面板里调。
 
 **Q：HEIC 打不开？**
-Chrome / Firefox 解不了 HEIC，用 Safari，或者先转成 JPG。工具会明确提示，不会静默失败。
+Chrome / Edge / Firefox 都解不了 HEIC，只有 Safari 可以。工具会明确提示，不会静默失败 —— 先转成 JPG 即可。
 
 **Q：手机上能用吗？**
-能。双击 `启动.command`，手机连同一 WiFi，浏览器访问终端显示的地址。布局已做移动端适配。
+能。两个办法：① 把 `index.html` 存进 iCloud / 网盘，用手机浏览器打开；
+② 电脑上双击 `启动.command`（macOS），手机连同一个 WiFi，访问终端显示的地址。布局已做移动端适配。
 
 **Q：为什么「同色采样」的颜色有时候不太对？**
 采样取的是图片最顶部中间三分之一的平均色。如果壁纸顶部正好有个深色物体，采样会被带偏 —— 这时改用「纯黑」或「自定义颜色」更稳。
@@ -171,9 +198,17 @@ Chrome / Firefox 解不了 HEIC，用 Safari，或者先转成 JPG。工具会�
 
 ## 开发与自检
 
-改 `index.html` 里的 CSS 变量即可换配色，改 `const DEFAULTS` / `const PRESETS` 换默认参数，浏览器刷新就生效，没有构建步骤。
+改 `index.html` 里的 CSS 变量即可换配色，改 `const DEFAULTS` / `const PRESETS` 换默认参数，浏览器刷新就生效 —— 没有构建步骤，没有 npm，没有 node_modules。
 
-说明书改 `docs/使用说明.md`，然后双击 `docs/生成说明书.command` 重新生成 HTML —— **只维护 md 一份**，避免两个版本内容打架。
+说明书改 `docs/使用说明.md`，然后：
+
+| 系统 | 重新生成 |
+|---|---|
+| Windows | 双击 `docs/生成说明书.bat` |
+| macOS | 双击 `docs/生成说明书.command` |
+| 任意 | `python3 docs/build_help.py` |
+
+它会一次做三件事：生成独立网页版 `使用说明.html` + `help.html`，并注入 `index.html` 的内嵌说明书。**内容源只有 md 一份**，重复执行结果字节一致。
 
 ---
 

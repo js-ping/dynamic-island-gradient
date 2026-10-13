@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>灵动岛渐变工具 · Dynamic Island Gradient</title>
-<meta name="description" content="给壁纸顶部加一层渐变蒙版，让 iPhone 灵动岛与状态栏自然融入画面。纯前端、零依赖、图片不出本机。">
+<title>岛影 · iPhone 灵动岛壁纸渐变工具</title>
+<meta name="description" content="给壁纸顶部加一层渐变蒙版，让 iPhone 灵动岛与状态栏自然融入画面。纯前端、零依赖、单文件，Windows / macOS 双击即用，图片不出本机。">
 <meta name="color-scheme" content="light dark">
 <style>
 /* ============ 主题变量 ============ */
@@ -412,7 +412,7 @@ footer a{color:var(--text-2)}
 <header>
   <div class="brand">
     <div class="logo">◒</div>
-    <h1>灵动岛渐变工具<small>v2.1</small></h1>
+    <h1>岛影<small>Dynamic Island Gradient · v2.2</small></h1>
   </div>
   <div class="spacer"></div>
   <button class="tbtn" id="manualBtn">说明书</button>
@@ -426,8 +426,8 @@ footer a{color:var(--text-2)}
   <section id="dropzone">
     <div class="big">🖼️</div>
     <h2>把壁纸拖进来，或者点一下选择</h2>
-    <p>支持 JPG / PNG / WebP / HEIC（Safari）<br>
-       也可以直接按 <span class="kbd">⌘</span><span class="kbd">V</span> 粘贴剪贴板里的图</p>
+    <p>支持 JPG / PNG / WebP / BMP / HEIC（Safari）<br>
+       也可以直接按 <span class="kbd" id="kbdMod">⌘</span><span class="kbd">V</span> 粘贴剪贴板里的图</p>
     <div class="steps">
       <div><b>1</b> 放入壁纸</div>
       <div><b>2</b> 拖动分割线对比效果</div>
@@ -576,7 +576,8 @@ footer a{color:var(--text-2)}
 
 <footer>
   所有处理都在你的浏览器里完成 —— 图片不上传、不联网、不留痕。<br>
-  项目开源在 <a href="https://github.com/js-ping/dynamic-island-gradient" target="_blank" rel="noopener">GitHub</a> · MIT License
+  Windows · macOS · Linux 通用，一个文件走天下 ·
+  开源在 <a href="https://github.com/js-ping/dynamic-island-gradient" target="_blank" rel="noopener">GitHub</a> · MIT License
 </footer>
 
 <div id="toast"></div>
@@ -596,9 +597,9 @@ footer a{color:var(--text-2)}
     </div>
     <div class="doc" id="manualDoc">
 <!-- MANUAL:BEGIN 自动生成区 · 勿手改 · 改 docs/使用说明.md -->
-<h1 id="灵动岛渐变工具-使用说明">灵动岛渐变工具 · 使用说明</h1>
+<h1 id="岛影-使用说明">岛影 · 使用说明</h1>
 <nav class="toc"><b>目录</b><ul><li><a href="#一-这个工具解决什么问题">一、这个工具解决什么问题</a></li><li><a href="#二-30-秒上手">二、30 秒上手</a></li><li><a href="#三-界面总览">三、界面总览</a></li><li><a href="#四-每个参数是什么意思">四、每个参数是什么意思</a></li><li><a href="#五-操作小技巧">五、操作小技巧</a></li><li><a href="#六-常见问题-faq">六、常见问题 FAQ</a></li><li><a href="#七-数据安全声明">七、数据安全声明</a></li><li><a href="#八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</a></li></ul></nav>
-<blockquote>给壁纸顶部加一层渐变蒙版，让 iPhone 的灵动岛和状态栏自然融进画面。<br><strong>纯前端，零依赖。整个工具就是一个 <code>index.html</code> 文件，双击就能用。图片全程留在你自己的电脑里。</strong><br>本说明书已经内置在里面了 —— 点顶栏右上角的「说明书」按钮随时打开。</blockquote>
+<blockquote>给壁纸顶部加一层渐变蒙版，让 iPhone 的灵动岛和状态栏自然融进画面。<br><strong>纯前端，零依赖。整个工具就是一个 <code>index.html</code> 文件，Windows / Mac 双击就能用。图片全程留在你自己的电脑里。</strong><br>本说明书已经内置在里面了 —— 点顶栏右上角的「说明书」按钮随时打开。</blockquote>
 <h2 id="一-这个工具解决什么问题">一、这个工具解决什么问题</h2>
 <p>iPhone 从 14 Pro 开始有了「灵动岛」—— 屏幕顶部中间一块永久的黑色药丸。</p>
 <p>问题是：如果你用一张明亮的照片当锁屏，顶部那块黑色硬件就会<strong>硬生生切</strong>在画面里，非常出戏。</p>
@@ -613,9 +614,14 @@ footer a{color:var(--text-2)}
 └──────────────┘              └──────────────┘</code></pre>
 <hr>
 <h2 id="二-30-秒上手">二、30 秒上手</h2>
-<div class="tw"><table><thead><tr><th>步骤</th><th>做什么</th></tr></thead><tbody><tr><td data-label="步骤"><strong>1</strong></td><td data-label="做什么"><strong>双击 <code>index.html</code></strong>（就这一个文件），浏览器会打开工具</td></tr><tr><td data-label="步骤"><strong>2</strong></td><td data-label="做什么">把壁纸拖进页面（或点一下选文件，或按 <code>⌘V</code> 粘贴）</td></tr><tr><td data-label="步骤"><strong>3</strong></td><td data-label="做什么">左右拖动中间的白色分割线，对比处理前后</td></tr><tr><td data-label="步骤"><strong>4</strong></td><td data-label="做什么">满意了点「下载壁纸」，把文件传到 iPhone 设为锁屏</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th>步骤</th><th>做什么</th></tr></thead><tbody><tr><td data-label="步骤"><strong>1</strong></td><td data-label="做什么"><strong>双击 <code>index.html</code></strong>（就这一个文件），浏览器会打开工具</td></tr><tr><td data-label="步骤"><strong>2</strong></td><td data-label="做什么">把壁纸拖进页面（或点一下选文件，或按 <code>⌘V</code> / <code>Ctrl+V</code> 粘贴）</td></tr><tr><td data-label="步骤"><strong>3</strong></td><td data-label="做什么">左右拖动中间的白色分割线，对比处理前后</td></tr><tr><td data-label="步骤"><strong>4</strong></td><td data-label="做什么">满意了点「下载壁纸」，把文件传到 iPhone 设为锁屏</td></tr></tbody></table></div>
 <p><strong>没有素材想先看看效果？</strong> 点首页的「没有素材？用示例图试试」，会当场生成一张 1320×2868 的示例壁纸。</p>
-<blockquote><strong>只有一个文件，随便拷。</strong> 把 <code>index.html</code> 拷到 U 盘、发到微信、放到任何一台电脑上，双击就能用 —— 不需要联网，不需要装任何东西，也不需要旁边的其他文件。<br>想用手机打开？把文件放进 iCloud 云盘，用 Safari 打开即可。或者双击仓库里的 <code>启动.command</code>，手机连同一个 WiFi 访问终端显示的地址。</blockquote>
+<h3 id="windows-用户看这里">Windows 用户看这里</h3>
+<p>Windows 和 Mac 上的用法<strong>完全一样</strong>，双击就开。只有一种情况需要多一步：</p>
+<p>如果双击 <code>index.html</code> 打开的是<strong>记事本</strong>而不是浏览器 —— 说明这台电脑把 <code>.html</code> 关联给了文本编辑器。三种解法任选：</p>
+<ol><li>右键 <code>index.html</code> →「打开方式」→ 选 Chrome / Edge → 勾上「始终使用此应用」；</li><li>双击同目录的 <strong><code>启动.bat</code></strong>（它会用系统默认浏览器打开）；</li><li>直接把 <code>index.html</code> 拖进已经打开的浏览器窗口。</li></ol>
+<blockquote><strong>哪个浏览器都行</strong>：Chrome / Edge / Firefox 都可以，不需要装任何插件。<br>唯一的例外是 <strong>HEIC 格式</strong>的照片，只有 Safari 能解 —— 遇到会明确提示，转成 JPG 即可。</blockquote>
+<blockquote><strong>只有一个文件，随便拷。</strong> 把 <code>index.html</code> 拷到 U 盘、发到微信、放到任何一台电脑上，双击就能用 —— 不需要联网，不需要装任何东西，也不需要旁边的其他文件。<br>想用手机打开？把文件放进 iCloud / 网盘，用手机浏览器打开即可。或者在 Mac 上双击 <code>启动.command</code>，手机连同一个 WiFi 访问终端显示的地址。</blockquote>
 <hr>
 <h2 id="三-界面总览">三、界面总览</h2>
 <pre><code>┌────────────────────────────────────────────────────────────┐
@@ -653,24 +659,25 @@ footer a{color:var(--text-2)}
 <h3 id="导出">导出</h3>
 <div class="tw"><table><thead><tr><th>项</th><th>说明</th></tr></thead><tbody><tr><td data-label="项"><strong>格式</strong></td><td data-label="说明">JPEG（体积小，推荐）/ PNG（无损，体积大）</td></tr><tr><td data-label="项"><strong>画质</strong></td><td data-label="说明">JPEG 专用，默认 95%。设壁纸 90% 以上足够，肉眼分不出</td></tr></tbody></table></div>
 <p>导出文件名会自动带上参数，方便你回溯：</p>
-<pre><code>DynamicIsland_black_4.2-13_easeout_20261009-1747.jpg
-              │      │      │        └─ 导出时间
-              │      │      └─ 曲线
-              │      └─ 完全覆盖% - 渐变结束%
-              └─ 颜色模式</code></pre>
+<pre><code>Daoying_black_4.2-13_easeout_20261013-0825.jpg
+          │      │      │        └─ 导出时间
+          │      │      └─ 曲线
+          │      └─ 完全覆盖% - 渐变结束%
+          └─ 颜色模式</code></pre>
 <h3 id="四个按钮">四个按钮</h3>
 <div class="tw"><table><thead><tr><th>按钮</th><th>作用</th></tr></thead><tbody><tr><td data-label="按钮"><strong>下载壁纸</strong></td><td data-label="作用">按原分辨率导出到「下载」文件夹</td></tr><tr><td data-label="按钮"><strong>复制到剪贴板</strong></td><td data-label="作用">直接复制图片，可以粘进聊天窗口 / 备忘录（Safari、Chrome 支持）</td></tr><tr><td data-label="按钮"><strong>换一张</strong></td><td data-label="作用">换一张壁纸，参数保留</td></tr><tr><td data-label="按钮"><strong>恢复默认参数</strong></td><td data-label="作用">所有参数回到初始值</td></tr></tbody></table></div>
 <hr>
 <h2 id="五-操作小技巧">五、操作小技巧</h2>
-<div class="tw"><table><thead><tr><th>操作</th><th>效果</th></tr></thead><tbody><tr><td data-label="操作">拖拽图片到页面</td><td data-label="效果">载入</td></tr><tr><td data-label="操作"><code>⌘V</code></td><td data-label="效果">粘贴剪贴板里的图片</td></tr><tr><td data-label="操作">拖中间的白色分割线</td><td data-label="效果">对比原图 / 处理后</td></tr><tr><td data-label="操作"><code>←</code> <code>→</code> 方向键</td><td data-label="效果">微调分割线位置（每次 2%）</td></tr><tr><td data-label="操作">点顶栏右边的圆钮</td><td data-label="效果">循环切换 跟随系统 → 深色 → 浅色</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th>操作</th><th>效果</th></tr></thead><tbody><tr><td data-label="操作">拖拽图片到页面</td><td data-label="效果">载入</td></tr><tr><td data-label="操作"><code>⌘V</code> / <code>Ctrl+V</code></td><td data-label="效果">粘贴剪贴板里的图片</td></tr><tr><td data-label="操作">拖中间的白色分割线</td><td data-label="效果">对比原图 / 处理后</td></tr><tr><td data-label="操作"><code>←</code> <code>→</code> 方向键</td><td data-label="效果">微调分割线位置（每次 2%）</td></tr><tr><td data-label="操作">点顶栏右边的圆钮</td><td data-label="效果">循环切换 跟随系统 → 深色 → 浅色</td></tr></tbody></table></div>
 <p><strong>参数会被记住。</strong> 下次打开工具，上次调的数值还在（存在浏览器本地，不上传）。</p>
 <hr>
 <h2 id="六-常见问题-faq">六、常见问题 FAQ</h2>
 <p><strong>Q：图太大/太多处理不动？</strong> A：不会。v2.0 换掉了逐像素的算法，改用浏览器原生的渐变合成，1320×2868 的原图拖滑杆也是实时出图。</p>
 <p><strong>Q：导出的图会变小吗？</strong> A：不会。导出就是原图的分辨率，一个像素都不缩。</p>
 <p><strong>Q：为什么我选了「同色采样」，顶部颜色和画面不太搭？</strong> A：采样取的是图片<strong>最顶部中间三分之一</strong>的平均色。如果你的壁纸顶部恰好有个深色物体（树枝、鸟），采样就会被它带偏。这时候改用「纯黑」或者手动「自定义颜色」更稳。</p>
-<p><strong>Q：HEIC 格式的壁纸打不开？</strong> A：Chrome 和 Firefox 解不了 HEIC。用 Safari 打开，或者先把图转成 JPG。工具会给出提示，不会静默失败。</p>
-<p><strong>Q：手机能用吗？</strong> A：能，两种办法： 一是把 <code>index.html</code> 存进 iCloud 云盘，用 iPhone 的「文件」App 点开、选 Safari 打开； 二是电脑上双击 <code>启动.command</code>，手机连同一个 WiFi，浏览器访问终端里显示的地址。 布局已经做了移动端适配。</p>
+<p><strong>Q：HEIC 格式的壁纸打不开？</strong> A：Chrome / Edge / Firefox 都解不了 HEIC，只有 Safari 可以。先把图转成 JPG 即可。工具会给出提示，不会静默失败。</p>
+<p><strong>Q：Windows 电脑上能用吗？</strong> A：能，和 Mac 上完全一样，双击 <code>index.html</code> 就开。唯一要留神的是：如果双击后打开的是记事本而不是浏览器， 说明这台电脑的 <code>.html</code> 关联被改过 —— 右键选「打开方式」指定 Chrome / Edge，或者双击同目录的 <code>启动.bat</code>。</p>
+<p><strong>Q：手机能用吗？</strong> A：能，两种办法： 一是把 <code>index.html</code> 存进 iCloud / 网盘，用手机浏览器打开； 二是 Mac 上双击 <code>启动.command</code>，手机连同一个 WiFi，浏览器访问终端里显示的地址。 布局已经做了移动端适配。</p>
 <p><strong>Q：图片会被上传吗？</strong> A：不会。整个工具没有任何网络请求，代码里没有一行 <code>fetch</code> / <code>XMLHttpRequest</code>。你可以断网使用，也可以右键「查看源代码」自己核对。</p>
 <p><strong>Q：会不会把效果画错、或者污染原图？</strong> A：处理后的像素只写在上层画布上，原图所在的画布从不改动。下方「渐变结束高度」以外的像素，测试验证过与原图<strong>逐字节一致</strong>。</p>
 <hr>
@@ -678,11 +685,11 @@ footer a{color:var(--text-2)}
 <ul><li><strong>无网络请求</strong>：不联网、不上传、不埋点、不加载任何第三方资源（字体、图标库、统计脚本统统没有）。</li><li><strong>无本地留存</strong>：图片不会被写入磁盘。只有你的参数设置存在浏览器 <code>localStorage</code> 里，随时可以在浏览器设置里清掉。</li><li><strong>完全可审计</strong>：整个工具就是一个 <code>index.html</code>，你可以用任何文本编辑器打开，从头读到尾。</li><li><strong>开源</strong>：MIT 协议，随便改、随便用、随便分发。</li></ul>
 <hr>
 <h2 id="八-我自己想改-指南">八、&quot;我自己想改&quot; 指南</h2>
-<div class="tw"><table><thead><tr><th>想改什么</th><th>改哪里</th></tr></thead><tbody><tr><td data-label="想改什么">颜色、圆角、字号</td><td data-label="改哪里"><code>index.html</code> 顶部 <code>&lt;style&gt;</code> 里的 CSS 变量（<code>:root</code> 段落）</td></tr><tr><td data-label="想改什么">默认参数</td><td data-label="改哪里">搜 <code>const DEFAULTS</code></td></tr><tr><td data-label="想改什么">预设档位（轻/标准/强）</td><td data-label="改哪里">搜 <code>const PRESETS</code></td></tr><tr><td data-label="想改什么">过渡曲线的数学形状</td><td data-label="改哪里">搜 <code>const CURVES</code></td></tr><tr><td data-label="想改什么">灵动岛参考框的位置</td><td data-label="改哪里">搜 <code>applyIslandRef</code>，里面是 4 个百分比</td></tr><tr><td data-label="想改什么"><strong>本说明书的内容</strong></td><td data-label="改哪里">改 <code>docs/使用说明.md</code>，再双击 <code>docs/生成说明书.command</code></td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th>想改什么</th><th>改哪里</th></tr></thead><tbody><tr><td data-label="想改什么">颜色、圆角、字号</td><td data-label="改哪里"><code>index.html</code> 顶部 <code>&lt;style&gt;</code> 里的 CSS 变量（<code>:root</code> 段落）</td></tr><tr><td data-label="想改什么">默认参数</td><td data-label="改哪里">搜 <code>const DEFAULTS</code></td></tr><tr><td data-label="想改什么">预设档位（轻/标准/强）</td><td data-label="改哪里">搜 <code>const PRESETS</code></td></tr><tr><td data-label="想改什么">过渡曲线的数学形状</td><td data-label="改哪里">搜 <code>const CURVES</code></td></tr><tr><td data-label="想改什么">灵动岛参考框的位置</td><td data-label="改哪里">搜 <code>applyIslandRef</code>，里面是 4 个百分比</td></tr><tr><td data-label="想改什么"><strong>本说明书的内容</strong></td><td data-label="改哪里">改 <code>docs/使用说明.md</code>，再双击 <code>docs/生成说明书.command</code>（Windows 用 <code>docs/生成说明书.bat</code>）</td></tr></tbody></table></div>
 <blockquote>⚠️ <code>index.html</code> 里 <code>MANUAL:BEGIN</code> 与 <code>MANUAL:END</code> 两条注释之间是<strong>自动生成区</strong>，<br>手改会在下次生成时被覆盖。改说明文字请改 md 文件。</blockquote>
 <p>改完直接刷新浏览器即可，不需要编译、不需要重启。</p>
 <hr>
-<p><em>本说明书由 <code>docs/使用说明.md</code> 生成，改内容请改 md 文件，再双击 <code>docs/生成说明书.command</code>。</em></p>
+<p><em>本说明书由 <code>docs/使用说明.md</code> 生成。改内容请改 md 文件，再双击 <code>docs/生成说明书.command</code>（Windows 用 <code>docs/生成说明书.bat</code>）。</em></p>
 <!-- MANUAL:END -->
     </div>
   </div>
@@ -691,11 +698,11 @@ footer a{color:var(--text-2)}
 <script>
 "use strict";
 /* =========================================================================
- * 灵动岛渐变工具 v2.1
+ * 岛影 · Dynamic Island Gradient  v2.2
  * 纯前端 · 零依赖 · 全程本地处理 · 单文件自包含
  *
  * 整个程序就是一个 index.html：样式、逻辑、数据、内嵌说明书全在里面，
- * 没有任何外部请求。拷到任何地方双击就能用。
+ * 没有任何外部请求。Windows / macOS / Linux 拷过去双击就能用。
  *
  * 核心思路：不再逐像素遍历（1320×2868 会卡），改用 canvas 原生线性渐变
  *  + 64 级色标，把过渡曲线离散成停靠点，交给 GPU 合成，拖动滑杆即时出图。
@@ -1019,7 +1026,7 @@ function stamp() {
 }
 function fileName(ext) {
   const modeTag = { black:'black', sample:'sample', custom:'color' }[state.mode];
-  return `DynamicIsland_${modeTag}_${state.hard}-${state.grad}_${state.curve}_${stamp()}.${ext}`;
+  return `Daoying_${modeTag}_${state.hard}-${state.grad}_${state.curve}_${stamp()}.${ext}`;
 }
 function exportBlob(cb) {
   const isJpeg = state.format === 'image/jpeg';
@@ -1286,10 +1293,22 @@ window.addEventListener('resize', () => {
   syncRange(e.target);
 }, true));
 
+/* ---------- 平台识别：快捷键提示按系统显示 ⌘ 还是 Ctrl ---------- */
+const IS_MAC = (() => {
+  try {
+    const uaData = navigator.userAgentData;
+    if (uaData && uaData.platform) return /mac/i.test(uaData.platform);
+  } catch (_) {}
+  // userAgentData 拿不到时回退到 userAgent（iPad 上的 Safari 仍报 "Macintosh"）
+  return /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+})();
+const CMD = IS_MAC ? '⌘' : 'Ctrl';
+$('kbdMod').textContent = CMD;
+document.documentElement.dataset.platform = IS_MAC ? 'mac' : 'other';
+
 /* ---------- 启动 ---------- */
 syncUI();
 tickClock();
-setInterval(tickClock, 20000);
-</script>
+setInterval(tickClock, 20000);</script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+# 统一行尾，避免 Windows 用户 clone 下来之后脚本跑不了
+* text=auto eol=lf
+
+# Windows 批处理必须是 CRLF，否则个别版本的 cmd 会出问题
+*.bat text eol=crlf
+
+# macOS / Linux 脚本保持 LF
+*.command text eol=lf
+*.sh text eol=lf
+Makefile text eol=lf
+
+# 二进制
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary

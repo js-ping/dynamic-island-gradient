@@ -9,7 +9,7 @@ cd "$(dirname "$0")" || exit 1
 
 PORT=9527
 echo ""
-echo "  ◒  灵动岛渐变工具"
+echo "  ◒  岛影 · Dynamic Island Gradient"
 echo "  ────────────────────────────────"
 echo ""
 

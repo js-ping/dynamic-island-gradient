@@ -2,7 +2,7 @@
 
 # Dynamic Island Gradient
 
-**Stop the Dynamic Island from cutting your wallpaper in half.**
+**岛影 (Dǎo Yǐng)** — *"island shadow"*, a pun on 倒影 (reflection)
 
 Adds a smooth fade-out mask to the top of any wallpaper so the iPhone's
 Dynamic Island and status bar blend into the picture instead of slicing it.
@@ -11,6 +11,7 @@ Dynamic Island and status bar blend into the picture instead of slicing it.
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)]()
 [![No Network](https://img.shields.io/badge/network-none-blue.svg)]()
 [![Single File](https://img.shields.io/badge/build-one%20HTML%20file-orange.svg)]()
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)]()
 
 [简体中文](README.md) · English
 
@@ -52,15 +53,30 @@ The manual is embedded too — one click slides it in, no network, no extra file
 
 ## Usage
 
-**No install. No build. No network. The whole program is one file.**
+**No install. No build. No network. One file, works on Windows, macOS and Linux.**
 
-1. Download **`index.html`** from this repo (that's the only file, 65 KB)
-2. **Double-click it** — it opens in your browser
-3. Drop your wallpaper in, drag the split line to taste
-4. Hit "Download", AirDrop it to your iPhone, set as wallpaper
+| OS | How to open | Notes |
+|---|---|---|
+| **Windows** | Double-click `index.html` | If Notepad opens instead, right-click → *Open with* → your browser; or double-click `启动.bat` |
+| **macOS** | Double-click `index.html` | Opens in your default browser. Use `启动.command` to serve over LAN for a phone |
+| **Linux** | Double-click `index.html` | Or `xdg-open index.html` |
+
+Then:
+
+1. Drop your wallpaper in (or click to pick, or paste with `Ctrl+V` / `⌘V`)
+2. Drag the white split line to compare before / after
+3. Hit "Download", AirDrop it to your iPhone, set as wallpaper
 
 > The manual is embedded — click "说明书" in the header. This one file can be copied
 > to a USB stick, sent over chat, or dropped on any computer and used by double-clicking.
+> **It needs no companion files.**
+
+### Browser support
+
+Chrome / Edge / Safari / Firefox and anything else modern — desktop or mobile.
+
+> The one exception is **HEIC** photos: Chrome / Edge / Firefox can't decode them
+> (Safari can). The tool says so explicitly rather than failing silently — convert to JPEG.
 
 ---
 
@@ -128,10 +144,11 @@ Result: dragging sliders on a 1320×2868 image is real-time.
 
 ```
 DynamicIslandGradient/
-├── index.html            ← everything lives here (single file, double-click)
+├── index.html            ← everything lives here (single file, all three OSes)
+├── 启动.bat               ← Windows launcher (in case .html is hijacked by an editor)
+├── 启动.command           ← macOS launcher (also serves over LAN for phones)
 ├── 使用说明.html          ← the same manual as a standalone page (Chinese)
 ├── help.html             ← manual, ASCII filename for phones
-├── 启动.command           ← double-click to serve locally (LAN access)
 ├── README.md / README.en.md
 ├── CHANGELOG.md
 ├── LICENSE               ← MIT

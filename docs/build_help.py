@@ -231,7 +231,7 @@ TPL = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>灵动岛渐变工具 · 使用说明</title>
+<title>岛影 · 使用说明</title>
 <meta name="color-scheme" content="light dark">
 <style>
 :root{
