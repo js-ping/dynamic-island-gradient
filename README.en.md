@@ -66,6 +66,23 @@ The manual is embedded too — one click slides it in, no network, no extra file
 
 **No install. No build. No network. One file, works on Windows, macOS and Linux.**
 
+### Just want to use it
+
+Grab a build from the **[Releases page](https://github.com/js-ping/dynamic-island-gradient/releases/latest)**:
+
+| Download | What it is |
+|---|---|
+| `Daoying-v2.2.0-single-file.html` | **Recommended** — one 67 KB file, double-click and go |
+| `Daoying-v2.2.0-Windows-macOS-Linux.zip` | Standalone app + both launchers + manual + README |
+
+Or clone the repo and use `index.html` directly — the contents are identical:
+
+```bash
+git clone https://github.com/js-ping/dynamic-island-gradient.git
+```
+
+### Opening it
+
 | OS | How to open | Notes |
 |---|---|---|
 | **Windows** | Double-click `index.html` | If Notepad opens instead, right-click → *Open with* → your browser; or double-click `启动.bat` |

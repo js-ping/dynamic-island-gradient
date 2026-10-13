@@ -65,6 +65,25 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 **不用装、不用配、不用联网。Windows、Mac、Linux 通吃，整个程序就是一个文件。**
 
+### 只想直接用，不想克隆仓库
+
+去 **[Releases 页面](https://github.com/js-ping/dynamic-island-gradient/releases/latest)** 下载：
+
+| 下载 | 说明 |
+|---|---|
+| `Daoying-v2.2.0-single-file.html` | **推荐**，67 KB 一个文件，双击即用 |
+| `Daoying-v2.2.0-Windows-macOS-Linux.zip` | 单文件 + 两个双击启动脚本 + 说明书 + README |
+
+> 下载后想改名随便改，叫 `岛影.html` 也行，不影响使用。
+
+或者克隆整个仓库，用里面的 `index.html`（内容完全一样）：
+
+```bash
+git clone https://github.com/js-ping/dynamic-island-gradient.git
+```
+
+### 打开它
+
 | 系统 | 怎么开 | 说明 |
 |---|---|---|
 | **Windows** | 双击 `index.html` | 如果被记事本打开了，改用右键 →「打开方式」→ 你的浏览器；或者双击 `启动.bat` |
