@@ -166,27 +166,33 @@ def main() -> None:
     dest.write_bytes(out_bytes)
 
     # 单文件之外再给一份人可读的许可证随附文件，方便连 zip 一起发
-    notice = dest.parent / "第三方组件说明.txt"
-    notice.write_text(
-        "岛影（Daoying）完整版 · 第三方组件说明\n"
-        "=" * 40 + "\n\n"
-        "「完整版」单文件 = 岛影自身代码（MIT） + 下面这个第三方组件（LGPL-3.0）。\n"
-        "组件全文许可证已内联在 HTML 文件里（搜索 id=\"license-lgpl3\"），此处再随附一份。\n\n"
-        "组件：{} {}\n"
-        "用途：解析 HEIC / HEIF（iPhone 相机默认格式）\n"
-        "上游：{}\n"
-        "libheif：https://github.com/strukturag/libheif\n"
-        "SHA-256：{}\n\n"
-        "{}\n\n{}\n".format(
-            VENDOR_NAME, VENDOR_VERSION, VENDOR_UPSTREAM,
-            hashlib.sha256(BUNDLE.read_bytes()).hexdigest(),
-            read(LICENSE_WRAPPER), read(LICENSE_LIBHEIF),
-        ),
-        encoding="utf-8",
-    )
+    title = "岛影（Daoying）完整版 · 第三方组件说明"
+    notice = "\n".join([
+        title,
+        "=" * 40,
+        "",
+        "「完整版」那个单文件 = 岛影自身代码（MIT） + 下面这个第三方组件（LGPL-3.0）。",
+        '组件全文许可证已内联在 HTML 文件内部（搜索 id="license-lgpl3"），此处再随附一份。',
+        "",
+        "组件：    {} {}".format(VENDOR_NAME, VENDOR_VERSION),
+        "用途：    解析 HEIC / HEIF（iPhone 相机默认格式）",
+        "上游：    {}".format(VENDOR_UPSTREAM),
+        "libheif： https://github.com/strukturag/libheif",
+        "SHA-256： {}".format(hashlib.sha256(BUNDLE.read_bytes()).hexdigest()),
+        "",
+        "许可证全文：",
+        "",
+        read(LICENSE_WRAPPER),
+        "",
+        read(LICENSE_LIBHEIF),
+        "",
+    ])
+    if notice.count(title) != 1:
+        die("随附说明的标题重复了，检查一下字符串拼接")
+    (dest.parent / "第三方组件说明.txt").write_text(notice, encoding="utf-8")
 
     print("✓ 已写出 " + str(dest.relative_to(ROOT)))
-    print("✓ 已写出 " + str(notice.relative_to(ROOT)))
+    print("✓ 已写出 " + str((dest.parent / "第三方组件说明.txt").relative_to(ROOT)))
 
 
 if __name__ == "__main__":
