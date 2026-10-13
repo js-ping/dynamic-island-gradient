@@ -66,6 +66,17 @@ The manual is embedded too — one click slides it in, no network, no extra file
 
 **No install. No build. No network. One file, works on Windows, macOS and Linux.**
 
+### Fastest path: use it online
+
+**→ [uppjs.com/daoying.html](https://uppjs.com/daoying.html)**
+
+Nothing to download — open it in a browser, drop a photo in, tune the gradient, export.
+It runs the *same code* as the single-file build, entirely inside your browser:
+your image is never uploaded and the page never talks to the network
+(pull your cable and check).
+
+Want something you can keep on the desktop and run fully offline? Read on.
+
 ### Just want to use it
 
 Grab a build from the **[Releases page](https://github.com/js-ping/dynamic-island-gradient/releases/latest)**:

@@ -65,6 +65,15 @@ iPhone 14 Pro 之后，屏幕顶部多了「灵动岛」—— 一块永久的�
 
 **不用装、不用配、不用联网。Windows、Mac、Linux 通吃，整个程序就是一个文件。**
 
+### 最快的路子：直接开网页版
+
+**→ [uppjs.com/daoying.html](https://uppjs.com/daoying.html)**
+
+什么都不用下，浏览器打开就能拖图、调渐变、导壁纸。和下载的单文件**是同一套代码**，
+处理全程在你自己浏览器里跑，图片不上传、不联网（可以断网验证）。
+
+想要一个能长期放桌面、断网也能用的，再往下看。
+
 ### 只想直接用，不想克隆仓库
 
 去 **[Releases 页面](https://github.com/js-ping/dynamic-island-gradient/releases/latest)** 下载：
